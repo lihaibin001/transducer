@@ -1,0 +1,12 @@
+uart.c:277:13:u_do_tx	16	static
+uart.c:71:6:Uart_InitIO	48	static
+uart.c:127:6:UART_ReConfig	0	static
+uart.c:139:6:Uart_Initialize	8	static
+uart.c:189:6:Uart_Get_Char	16	static
+uart.c:225:6:Uart_Put_Char	16	static
+uart.c:315:6:UART_TX_ISR	8	static
+uart.c:350:6:UART_RX_ISR	32	static
+uart.c:407:6:UART_ERR_ISR	0	static
+uart.c:471:16:UART_Transmit	32	static
+uart.c:493:6:UART_Rx_Empty	8	static
+uart.c:504:6:UART_Reset_Buf	0	static
