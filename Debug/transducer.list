@@ -5,39 +5,39 @@ Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
   0 .isr_vector   000000c4  08000000  08000000  00010000  2**0
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  1 .text         00003ee0  080000c4  080000c4  000100c4  2**2
+  1 .text         00003fac  080000c4  080000c4  000100c4  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .rodata       00000000  08003fa4  08003fa4  00020028  2**0
+  2 .rodata       00000008  08004070  08004070  00014070  2**0
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  3 .init_array   00000004  08004078  08004078  00014078  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  3 .init_array   00000004  08003fa4  08003fa4  00013fa4  2**2
+  4 .fini_array   00000004  0800407c  0800407c  0001407c  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  4 .fini_array   00000004  08003fa8  08003fa8  00013fa8  2**2
+  5 .data         00000028  20000000  08004080  00020000  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  5 .data         00000028  20000000  08003fac  00020000  2**2
-                  CONTENTS, ALLOC, LOAD, DATA
-  6 .bss          00000458  20000028  08003fd4  00020028  2**2
+  6 .bss          00000458  20000028  080040a8  00020028  2**2
                   ALLOC
-  7 ._user_heap_stack 00000080  20000480  08003fd4  00020480  2**0
+  7 ._user_heap_stack 00000080  20000480  080040a8  00020480  2**0
                   ALLOC
   8 .ARM.attributes 00000028  00000000  00000000  00020028  2**0
                   CONTENTS, READONLY
-  9 .debug_line   00004ac1  00000000  00000000  00020050  2**0
+  9 .debug_line   00004e23  00000000  00000000  00020050  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_info   0000ba37  00000000  00000000  00024b11  2**0
+ 10 .debug_info   0000d1c4  00000000  00000000  00024e73  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_abbrev 00002c88  00000000  00000000  00030548  2**0
+ 11 .debug_abbrev 000030a0  00000000  00000000  00032037  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_aranges 00000348  00000000  00000000  000331d0  2**3
+ 12 .debug_aranges 00000368  00000000  00000000  000350d8  2**3
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_ranges 000000a0  00000000  00000000  00033518  2**3
+ 13 .debug_ranges 000000a0  00000000  00000000  00035440  2**3
                   CONTENTS, READONLY, DEBUGGING
- 14 .debug_loc    0000649e  00000000  00000000  000335b8  2**0
+ 14 .debug_loc    000064c4  00000000  00000000  000354e0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 15 .debug_str    00004c74  00000000  00000000  00039a56  2**0
+ 15 .debug_str    00004e7a  00000000  00000000  0003b9a4  2**0
                   CONTENTS, READONLY, DEBUGGING
- 16 .comment      0000007c  00000000  00000000  0003e6ca  2**0
+ 16 .comment      0000007c  00000000  00000000  0004081e  2**0
                   CONTENTS, READONLY
- 17 .debug_frame  000025bc  00000000  00000000  0003e748  2**2
+ 17 .debug_frame  0000263c  00000000  00000000  0004089c  2**2
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -59,7 +59,7 @@ Disassembly of section .text:
  80000de:	bd10      	pop	{r4, pc}
  80000e0:	20000028 	.word	0x20000028
  80000e4:	00000000 	.word	0x00000000
- 80000e8:	08003f88 	.word	0x08003f88
+ 80000e8:	08004054 	.word	0x08004054
 
 080000ec <frame_dummy>:
  80000ec:	4b04      	ldr	r3, [pc, #16]	; (8000100 <frame_dummy+0x14>)
@@ -74,8 +74,8 @@ Disassembly of section .text:
  80000fe:	46c0      	nop			; (mov r8, r8)
  8000100:	00000000 	.word	0x00000000
  8000104:	2000002c 	.word	0x2000002c
- 8000108:	08003f88 	.word	0x08003f88
- 800010c:	08003fac 	.word	0x08003fac
+ 8000108:	08004054 	.word	0x08004054
+ 800010c:	08004080 	.word	0x08004080
  8000110:	20000000 	.word	0x20000000
  8000114:	20000028 	.word	0x20000028
  8000118:	20000028 	.word	0x20000028
@@ -354,7 +354,7 @@ static void SetSysClock(void)
  800025e:	4019      	ands	r1, r3
  8000260:	3101      	adds	r1, #1
         SystemCoreClock = (HSE_VALUE / prediv1factor) * pllmull; 
- 8000262:	f003 fdb7 	bl	8003dd4 <__udivsi3>
+ 8000262:	f003 fe17 	bl	8003e94 <__udivsi3>
  8000266:	e7f5      	b.n	8000254 <SystemCoreClockUpdate+0x3c>
  8000268:	40021000 	.word	0x40021000
  800026c:	20000004 	.word	0x20000004
@@ -7371,7 +7371,7 @@ void RCC_GetClocksFreq(RCC_ClocksTypeDef* RCC_Clocks)
  8001b86:	4019      	ands	r1, r3
  8001b88:	3101      	adds	r1, #1
         RCC_Clocks->SYSCLK_Frequency = (HSE_VALUE / prediv1factor) * pllmull; 
- 8001b8a:	f002 f923 	bl	8003dd4 <__udivsi3>
+ 8001b8a:	f002 f983 	bl	8003e94 <__udivsi3>
  8001b8e:	e7f5      	b.n	8001b7c <RCC_GetClocksFreq+0x74>
     if((RCC->CFGR & RCC_CFGR_ADCPRE) != RCC_CFGR_ADCPRE)
  8001b90:	686a      	ldr	r2, [r5, #4]
@@ -9992,7 +9992,7 @@ void I2S_Init(SPI_TypeDef* SPIx, I2S_InitTypeDef* I2S_InitStruct)
  80027e8:	230a      	movs	r3, #10
  80027ea:	68a1      	ldr	r1, [r4, #8]
  80027ec:	4358      	muls	r0, r3
- 80027ee:	f001 faf1 	bl	8003dd4 <__udivsi3>
+ 80027ee:	f001 fb51 	bl	8003e94 <__udivsi3>
  80027f2:	3005      	adds	r0, #5
  80027f4:	b280      	uxth	r0, r0
     }
@@ -10000,7 +10000,7 @@ void I2S_Init(SPI_TypeDef* SPIx, I2S_InitTypeDef* I2S_InitStruct)
     /* Remove the floating point */
     tmp = tmp / 10;
  80027f6:	210a      	movs	r1, #10
- 80027f8:	f001 faec 	bl	8003dd4 <__udivsi3>
+ 80027f8:	f001 fb4c 	bl	8003e94 <__udivsi3>
 
     /* Check the parity of the divider */
     i2sodd = (uint16_t)(tmp & (uint16_t)0x0001);
@@ -10063,7 +10063,7 @@ void I2S_Init(SPI_TypeDef* SPIx, I2S_InitTypeDef* I2S_InitStruct)
  8002834:	bdf0      	pop	{r4, r5, r6, r7, pc}
       tmp = (uint16_t)(((((sourceclock / (32 * packetlength)) *10 ) / I2S_InitStruct->I2S_AudioFreq)) + 5);
  8002836:	0179      	lsls	r1, r7, #5
- 8002838:	f001 facc 	bl	8003dd4 <__udivsi3>
+ 8002838:	f001 fb2c 	bl	8003e94 <__udivsi3>
  800283c:	e7d4      	b.n	80027e8 <I2S_Init+0x3a>
     i2sodd = (uint16_t)0;
  800283e:	2300      	movs	r3, #0
@@ -13163,14 +13163,14 @@ void USART_DeInit(USART_TypeDef* USARTx)
     divider = (uint32_t)((apbclock) / (USART_InitStruct->USART_BaudRate));
  8003536:	0031      	movs	r1, r6
  8003538:	0038      	movs	r0, r7
- 800353a:	f000 fc4b 	bl	8003dd4 <__udivsi3>
+ 800353a:	f000 fcab 	bl	8003e94 <__udivsi3>
     tmpreg  = (uint32_t)((apbclock) % (USART_InitStruct->USART_BaudRate));
  800353e:	0031      	movs	r1, r6
     divider = (uint32_t)((apbclock) / (USART_InitStruct->USART_BaudRate));
  8003540:	0005      	movs	r5, r0
     tmpreg  = (uint32_t)((apbclock) % (USART_InitStruct->USART_BaudRate));
  8003542:	0038      	movs	r0, r7
- 8003544:	f000 fccc 	bl	8003ee0 <__aeabi_uidivmod>
+ 8003544:	f000 fd2c 	bl	8003fa0 <__aeabi_uidivmod>
   }
   
   /* round the divider : if fractional part i greater than 0.5 increment divider */
@@ -14680,1108 +14680,1255 @@ void WWDG_ClearFlag(void)
  8003a1e:	4770      	bx	lr
  8003a20:	40002c00 	.word	0x40002c00
 
-08003a24 <NMI_Handler>:
- 8003a24:	4770      	bx	lr
+08003a24 <rs485_init>:
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+	GPIO_SetBits(GPIOA, GPIO_Pin_4);
+}
 
-08003a26 <HardFault_Handler>:
+void rs485_init(void) {
+ 8003a24:	b537      	push	{r0, r1, r2, r4, r5, lr}
+	Uart_Initialize(1);
+ 8003a26:	2001      	movs	r0, #1
+ 8003a28:	f000 f8e1 	bl	8003bee <Uart_Initialize>
+	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
+ 8003a2c:	2080      	movs	r0, #128	; 0x80
+ 8003a2e:	2101      	movs	r1, #1
+ 8003a30:	0280      	lsls	r0, r0, #10
+ 8003a32:	f7fe f905 	bl	8001c40 <RCC_AHBPeriphClockCmd>
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+ 8003a36:	466a      	mov	r2, sp
+ 8003a38:	2301      	movs	r3, #1
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+ 8003a3a:	2490      	movs	r4, #144	; 0x90
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4;
+ 8003a3c:	2510      	movs	r5, #16
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+ 8003a3e:	7113      	strb	r3, [r2, #4]
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+ 8003a40:	2300      	movs	r3, #0
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+ 8003a42:	05e4      	lsls	r4, r4, #23
+ 8003a44:	4669      	mov	r1, sp
+ 8003a46:	0020      	movs	r0, r4
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4;
+ 8003a48:	9500      	str	r5, [sp, #0]
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+ 8003a4a:	7193      	strb	r3, [r2, #6]
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+ 8003a4c:	7153      	strb	r3, [r2, #5]
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+ 8003a4e:	71d3      	strb	r3, [r2, #7]
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+ 8003a50:	f7fd fb7a 	bl	8001148 <GPIO_Init>
+	GPIO_SetBits(GPIOA, GPIO_Pin_4);
+ 8003a54:	0029      	movs	r1, r5
+ 8003a56:	0020      	movs	r0, r4
+ 8003a58:	f7fd fbe2 	bl	8001220 <GPIO_SetBits>
+	rs485_enable();
+}
+ 8003a5c:	bd37      	pop	{r0, r1, r2, r4, r5, pc}
+
+08003a5e <rs485_send_data>:
+	int i;
+	rs485_send_data("1234", 4);
+	for(i=0; i<0xFFFF; i++)
+		;
+}
+bool rs485_send_data(uint8_t *pData, uint32_t len) {
+ 8003a5e:	b510      	push	{r4, lr}
+	if(len != UART_Transmit(1, pData, len)){
+ 8003a60:	b2ca      	uxtb	r2, r1
+bool rs485_send_data(uint8_t *pData, uint32_t len) {
+ 8003a62:	000c      	movs	r4, r1
+	if(len != UART_Transmit(1, pData, len)){
+ 8003a64:	0001      	movs	r1, r0
+ 8003a66:	2001      	movs	r0, #1
+ 8003a68:	f000 f9ba 	bl	8003de0 <UART_Transmit>
+ 8003a6c:	1b00      	subs	r0, r0, r4
+ 8003a6e:	4243      	negs	r3, r0
+ 8003a70:	4158      	adcs	r0, r3
+		return false;
+	}
+	return true;
+}
+ 8003a72:	b2c0      	uxtb	r0, r0
+ 8003a74:	bd10      	pop	{r4, pc}
+
+08003a76 <rs485_task>:
+void rs485_task(void) {
+ 8003a76:	b510      	push	{r4, lr}
+	rs485_send_data("1234", 4);
+ 8003a78:	2104      	movs	r1, #4
+ 8003a7a:	4802      	ldr	r0, [pc, #8]	; (8003a84 <rs485_task+0xe>)
+ 8003a7c:	f7ff ffef 	bl	8003a5e <rs485_send_data>
+}
+ 8003a80:	bd10      	pop	{r4, pc}
+ 8003a82:	46c0      	nop			; (mov r8, r8)
+ 8003a84:	08004070 	.word	0x08004070
+
+08003a88 <NMI_Handler>:
+ 8003a88:	4770      	bx	lr
+
+08003a8a <HardFault_Handler>:
   * @brief  This function handles Hard Fault exception.
   * @param  None
   * @retval None
   */
 void HardFault_Handler(void)
 {
- 8003a26:	e7fe      	b.n	8003a26 <HardFault_Handler>
+ 8003a8a:	e7fe      	b.n	8003a8a <HardFault_Handler>
 
-08003a28 <SVC_Handler>:
- 8003a28:	4770      	bx	lr
+08003a8c <SVC_Handler>:
+ 8003a8c:	4770      	bx	lr
 
-08003a2a <PendSV_Handler>:
- 8003a2a:	4770      	bx	lr
+08003a8e <PendSV_Handler>:
+ 8003a8e:	4770      	bx	lr
 
-08003a2c <SysTick_Handler>:
+08003a90 <SysTick_Handler>:
   * @param  None
   * @retval None
   */
 void SysTick_Handler(void)
 {
 }
- 8003a2c:	4770      	bx	lr
+ 8003a90:	4770      	bx	lr
 	...
 
-08003a30 <u_do_tx>:
+08003a94 <u_do_tx>:
 *              and sends it to the hardware. Provides common code for first
 *              byte transmission (before transmit interrupt is enabled) and
 *              successive byte transmission (from transmit interrupt).
 *******************************************************************************/
 static void u_do_tx (uint8_t chan)
 {
- 8003a30:	b570      	push	{r4, r5, r6, lr}
+ 8003a94:	b570      	push	{r4, r5, r6, lr}
     USART_TypeDef* tmp_USARTx;
 
     switch(chan)
- 8003a32:	2800      	cmp	r0, #0
- 8003a34:	d01c      	beq.n	8003a70 <u_do_tx+0x40>
- 8003a36:	2801      	cmp	r0, #1
- 8003a38:	d119      	bne.n	8003a6e <u_do_tx+0x3e>
+ 8003a96:	2800      	cmp	r0, #0
+ 8003a98:	d01c      	beq.n	8003ad4 <u_do_tx+0x40>
+ 8003a9a:	2801      	cmp	r0, #1
+ 8003a9c:	d119      	bne.n	8003ad2 <u_do_tx+0x3e>
     {
         case 0:
             tmp_USARTx = USART1;
             break;
         case 1:
             tmp_USARTx = USART2;
- 8003a3a:	4c0e      	ldr	r4, [pc, #56]	; (8003a74 <u_do_tx+0x44>)
+ 8003a9e:	4c0e      	ldr	r4, [pc, #56]	; (8003ad8 <u_do_tx+0x44>)
         default:
 	   return;
             break;
     }
 
     uart_chan[chan].tx_count--;      // Decrement tx buffer byte count
- 8003a3c:	221c      	movs	r2, #28
- 8003a3e:	0013      	movs	r3, r2
- 8003a40:	4343      	muls	r3, r0
- 8003a42:	4d0d      	ldr	r5, [pc, #52]	; (8003a78 <u_do_tx+0x48>)
- 8003a44:	18eb      	adds	r3, r5, r3
- 8003a46:	8a19      	ldrh	r1, [r3, #16]
+ 8003aa0:	221c      	movs	r2, #28
+ 8003aa2:	0013      	movs	r3, r2
+ 8003aa4:	4343      	muls	r3, r0
+ 8003aa6:	4d0d      	ldr	r5, [pc, #52]	; (8003adc <u_do_tx+0x48>)
+ 8003aa8:	18eb      	adds	r3, r5, r3
+ 8003aaa:	8a19      	ldrh	r1, [r3, #16]
     uart_chan[chan].tx_out++;        // Increment index
     if ((uart_chan[chan].tx_out) >= (uart_chan[chan].tx_size))
- 8003a48:	8a5e      	ldrh	r6, [r3, #18]
+ 8003aac:	8a5e      	ldrh	r6, [r3, #18]
     uart_chan[chan].tx_count--;      // Decrement tx buffer byte count
- 8003a4a:	3901      	subs	r1, #1
- 8003a4c:	8219      	strh	r1, [r3, #16]
+ 8003aae:	3901      	subs	r1, #1
+ 8003ab0:	8219      	strh	r1, [r3, #16]
     uart_chan[chan].tx_out++;        // Increment index
- 8003a4e:	89d9      	ldrh	r1, [r3, #14]
- 8003a50:	3101      	adds	r1, #1
- 8003a52:	b289      	uxth	r1, r1
- 8003a54:	81d9      	strh	r1, [r3, #14]
+ 8003ab2:	89d9      	ldrh	r1, [r3, #14]
+ 8003ab4:	3101      	adds	r1, #1
+ 8003ab6:	b289      	uxth	r1, r1
+ 8003ab8:	81d9      	strh	r1, [r3, #14]
     if ((uart_chan[chan].tx_out) >= (uart_chan[chan].tx_size))
- 8003a56:	428e      	cmp	r6, r1
- 8003a58:	d801      	bhi.n	8003a5e <u_do_tx+0x2e>
+ 8003aba:	428e      	cmp	r6, r1
+ 8003abc:	d801      	bhi.n	8003ac2 <u_do_tx+0x2e>
     {
        uart_chan[chan].tx_out = 0; // Wrap index
- 8003a5a:	2100      	movs	r1, #0
- 8003a5c:	81d9      	strh	r1, [r3, #14]
+ 8003abe:	2100      	movs	r1, #0
+ 8003ac0:	81d9      	strh	r1, [r3, #14]
     }
 
     // Write to hardware transmit register
     USART_SendData(tmp_USARTx,uart_chan[chan].tx_buf[uart_chan[chan].tx_out]);
- 8003a5e:	4342      	muls	r2, r0
- 8003a60:	18aa      	adds	r2, r5, r2
- 8003a62:	89d3      	ldrh	r3, [r2, #14]
- 8003a64:	6952      	ldr	r2, [r2, #20]
- 8003a66:	0020      	movs	r0, r4
- 8003a68:	5cd1      	ldrb	r1, [r2, r3]
- 8003a6a:	f7ff fe59 	bl	8003720 <USART_SendData>
+ 8003ac2:	4342      	muls	r2, r0
+ 8003ac4:	18aa      	adds	r2, r5, r2
+ 8003ac6:	89d3      	ldrh	r3, [r2, #14]
+ 8003ac8:	6952      	ldr	r2, [r2, #20]
+ 8003aca:	0020      	movs	r0, r4
+ 8003acc:	5cd1      	ldrb	r1, [r2, r3]
+ 8003ace:	f7ff fe27 	bl	8003720 <USART_SendData>
 
     //if(chan == UART_3G_CHANNEL)
         //DEBUG_PRINT1( DEBUG_MEDIUM, "%c\r\n", uart_chan[chan].tx_buf[uart_chan[chan].tx_out]);
 }
- 8003a6e:	bd70      	pop	{r4, r5, r6, pc}
+ 8003ad2:	bd70      	pop	{r4, r5, r6, pc}
             tmp_USARTx = USART1;
- 8003a70:	4c02      	ldr	r4, [pc, #8]	; (8003a7c <u_do_tx+0x4c>)
- 8003a72:	e7e3      	b.n	8003a3c <u_do_tx+0xc>
- 8003a74:	40004400 	.word	0x40004400
- 8003a78:	20000448 	.word	0x20000448
- 8003a7c:	40013800 	.word	0x40013800
+ 8003ad4:	4c02      	ldr	r4, [pc, #8]	; (8003ae0 <u_do_tx+0x4c>)
+ 8003ad6:	e7e3      	b.n	8003aa0 <u_do_tx+0xc>
+ 8003ad8:	40004400 	.word	0x40004400
+ 8003adc:	20000448 	.word	0x20000448
+ 8003ae0:	40013800 	.word	0x40013800
 
-08003a80 <Uart_InitIO>:
+08003ae4 <Uart_InitIO>:
+	RCC_APB1PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
+ 8003ae4:	2101      	movs	r1, #1
 {
- 8003a80:	b570      	push	{r4, r5, r6, lr}
- 8003a82:	0004      	movs	r4, r0
- 8003a84:	b088      	sub	sp, #32
+ 8003ae6:	b570      	push	{r4, r5, r6, lr}
+ 8003ae8:	0004      	movs	r4, r0
+ 8003aea:	b08a      	sub	sp, #40	; 0x28
+	RCC_APB1PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
+ 8003aec:	0008      	movs	r0, r1
+ 8003aee:	f7fe f8bf 	bl	8001c70 <RCC_APB1PeriphClockCmd>
     switch(chan)
- 8003a86:	2800      	cmp	r0, #0
- 8003a88:	d003      	beq.n	8003a92 <Uart_InitIO+0x12>
- 8003a8a:	2801      	cmp	r0, #1
- 8003a8c:	d034      	beq.n	8003af8 <Uart_InitIO+0x78>
+ 8003af2:	2c00      	cmp	r4, #0
+ 8003af4:	d003      	beq.n	8003afe <Uart_InitIO+0x1a>
+ 8003af6:	2c01      	cmp	r4, #1
+ 8003af8:	d02a      	beq.n	8003b50 <Uart_InitIO+0x6c>
 }
- 8003a8e:	b008      	add	sp, #32
- 8003a90:	bd70      	pop	{r4, r5, r6, pc}
-		GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
- 8003a92:	2380      	movs	r3, #128	; 0x80
-		GPIO_Init( GPIOA, &GPIO_InitStructure );
- 8003a94:	2090      	movs	r0, #144	; 0x90
-		GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
- 8003a96:	00db      	lsls	r3, r3, #3
- 8003a98:	9300      	str	r3, [sp, #0]
+ 8003afa:	b00a      	add	sp, #40	; 0x28
+ 8003afc:	bd70      	pop	{r4, r5, r6, pc}
 		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
- 8003a9a:	2602      	movs	r6, #2
- 8003a9c:	466b      	mov	r3, sp
+ 8003afe:	2302      	movs	r3, #2
 		GPIO_Init( GPIOA, &GPIO_InitStructure );
- 8003a9e:	4669      	mov	r1, sp
- 8003aa0:	05c0      	lsls	r0, r0, #23
+ 8003b00:	2090      	movs	r0, #144	; 0x90
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
+ 8003b02:	2501      	movs	r5, #1
 		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
- 8003aa2:	711e      	strb	r6, [r3, #4]
-		GPIO_Init( GPIOA, &GPIO_InitStructure );
- 8003aa4:	f7fd fb50 	bl	8001148 <GPIO_Init>
+ 8003b04:	a902      	add	r1, sp, #8
+ 8003b06:	710b      	strb	r3, [r1, #4]
 		GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
- 8003aa8:	2380      	movs	r3, #128	; 0x80
+ 8003b08:	33ff      	adds	r3, #255	; 0xff
+ 8003b0a:	33ff      	adds	r3, #255	; 0xff
 		GPIO_Init( GPIOA, &GPIO_InitStructure );
- 8003aaa:	2090      	movs	r0, #144	; 0x90
+ 8003b0c:	05c0      	lsls	r0, r0, #23
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+ 8003b0e:	718c      	strb	r4, [r1, #6]
 		GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
- 8003aac:	009b      	lsls	r3, r3, #2
+ 8003b10:	9302      	str	r3, [sp, #8]
 		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
- 8003aae:	2501      	movs	r5, #1
-		GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
- 8003ab0:	9300      	str	r3, [sp, #0]
-		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
- 8003ab2:	466b      	mov	r3, sp
+ 8003b12:	714d      	strb	r5, [r1, #5]
 		GPIO_Init( GPIOA, &GPIO_InitStructure );
- 8003ab4:	4669      	mov	r1, sp
- 8003ab6:	05c0      	lsls	r0, r0, #23
-		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
- 8003ab8:	715d      	strb	r5, [r3, #5]
-		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
- 8003aba:	711e      	strb	r6, [r3, #4]
-		GPIO_Init( GPIOA, &GPIO_InitStructure );
- 8003abc:	f7fd fb44 	bl	8001148 <GPIO_Init>
+ 8003b14:	f7fd fb18 	bl	8001148 <GPIO_Init>
 		USART_InitStructure.USART_BaudRate = 115200;
- 8003ac0:	23e1      	movs	r3, #225	; 0xe1
- 8003ac2:	025b      	lsls	r3, r3, #9
- 8003ac4:	9302      	str	r3, [sp, #8]
+ 8003b18:	23e1      	movs	r3, #225	; 0xe1
+ 8003b1a:	025b      	lsls	r3, r3, #9
+ 8003b1c:	9304      	str	r3, [sp, #16]
 		USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
- 8003ac6:	230c      	movs	r3, #12
+ 8003b1e:	230c      	movs	r3, #12
 		USART_Init( USART1, &USART_InitStructure );
- 8003ac8:	a902      	add	r1, sp, #8
- 8003aca:	4823      	ldr	r0, [pc, #140]	; (8003b58 <Uart_InitIO+0xd8>)
+ 8003b20:	a904      	add	r1, sp, #16
+ 8003b22:	482e      	ldr	r0, [pc, #184]	; (8003bdc <Uart_InitIO+0xf8>)
 		USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
- 8003acc:	9306      	str	r3, [sp, #24]
+ 8003b24:	9308      	str	r3, [sp, #32]
 		USART_InitStructure.USART_WordLength = USART_WordLength_8b;
- 8003ace:	9403      	str	r4, [sp, #12]
+ 8003b26:	9405      	str	r4, [sp, #20]
 		USART_InitStructure.USART_StopBits = USART_StopBits_1;
- 8003ad0:	9404      	str	r4, [sp, #16]
+ 8003b28:	9406      	str	r4, [sp, #24]
 		USART_InitStructure.USART_Parity = USART_Parity_No ;
- 8003ad2:	9405      	str	r4, [sp, #20]
+ 8003b2a:	9407      	str	r4, [sp, #28]
 		USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
- 8003ad4:	9407      	str	r4, [sp, #28]
+ 8003b2c:	9409      	str	r4, [sp, #36]	; 0x24
 		USART_Init( USART1, &USART_InitStructure );
- 8003ad6:	f7ff fd03 	bl	80034e0 <USART_Init>
+ 8003b2e:	f7ff fcd7 	bl	80034e0 <USART_Init>
 		USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
- 8003ada:	002a      	movs	r2, r5
- 8003adc:	491f      	ldr	r1, [pc, #124]	; (8003b5c <Uart_InitIO+0xdc>)
- 8003ade:	481e      	ldr	r0, [pc, #120]	; (8003b58 <Uart_InitIO+0xd8>)
- 8003ae0:	f7ff fef8 	bl	80038d4 <USART_ITConfig>
+ 8003b32:	002a      	movs	r2, r5
+ 8003b34:	492a      	ldr	r1, [pc, #168]	; (8003be0 <Uart_InitIO+0xfc>)
+ 8003b36:	4829      	ldr	r0, [pc, #164]	; (8003bdc <Uart_InitIO+0xf8>)
+ 8003b38:	f7ff fecc 	bl	80038d4 <USART_ITConfig>
 		USART_ITConfig(USART1, USART_IT_TC, DISABLE);
- 8003ae4:	491e      	ldr	r1, [pc, #120]	; (8003b60 <Uart_InitIO+0xe0>)
- 8003ae6:	481c      	ldr	r0, [pc, #112]	; (8003b58 <Uart_InitIO+0xd8>)
- 8003ae8:	0022      	movs	r2, r4
- 8003aea:	f7ff fef3 	bl	80038d4 <USART_ITConfig>
-		USART_Cmd(USART1, ENABLE);
- 8003aee:	0029      	movs	r1, r5
- 8003af0:	4819      	ldr	r0, [pc, #100]	; (8003b58 <Uart_InitIO+0xd8>)
-		USART_Cmd(USART2, ENABLE);
- 8003af2:	f7ff fd67 	bl	80035c4 <USART_Cmd>
-}
- 8003af6:	e7ca      	b.n	8003a8e <Uart_InitIO+0xe>
-		GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;
- 8003af8:	2308      	movs	r3, #8
-		GPIO_Init( GPIOA, &GPIO_InitStructure );
- 8003afa:	2090      	movs	r0, #144	; 0x90
-		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
- 8003afc:	2502      	movs	r5, #2
-		GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;
- 8003afe:	9300      	str	r3, [sp, #0]
-		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
- 8003b00:	466b      	mov	r3, sp
-		GPIO_Init( GPIOA, &GPIO_InitStructure );
- 8003b02:	4669      	mov	r1, sp
- 8003b04:	05c0      	lsls	r0, r0, #23
-		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
- 8003b06:	711d      	strb	r5, [r3, #4]
-		GPIO_Init( GPIOA, &GPIO_InitStructure );
- 8003b08:	f7fd fb1e 	bl	8001148 <GPIO_Init>
-		GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
- 8003b0c:	2304      	movs	r3, #4
-		GPIO_Init( GPIOA, &GPIO_InitStructure );
- 8003b0e:	2090      	movs	r0, #144	; 0x90
-		GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
- 8003b10:	9300      	str	r3, [sp, #0]
-		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
- 8003b12:	466b      	mov	r3, sp
-		GPIO_Init( GPIOA, &GPIO_InitStructure );
- 8003b14:	4669      	mov	r1, sp
- 8003b16:	05c0      	lsls	r0, r0, #23
-		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
- 8003b18:	711d      	strb	r5, [r3, #4]
-		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
- 8003b1a:	715c      	strb	r4, [r3, #5]
-		GPIO_Init( GPIOA, &GPIO_InitStructure );
- 8003b1c:	f7fd fb14 	bl	8001148 <GPIO_Init>
-		USART_InitStructure.USART_BaudRate = 9600;
- 8003b20:	2396      	movs	r3, #150	; 0x96
- 8003b22:	019b      	lsls	r3, r3, #6
-		USART_InitStructure.USART_WordLength = USART_WordLength_8b;
- 8003b24:	2500      	movs	r5, #0
-		USART_InitStructure.USART_BaudRate = 9600;
- 8003b26:	9302      	str	r3, [sp, #8]
-		USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
- 8003b28:	230c      	movs	r3, #12
-		USART_Init( USART2, &USART_InitStructure );
- 8003b2a:	a902      	add	r1, sp, #8
- 8003b2c:	480d      	ldr	r0, [pc, #52]	; (8003b64 <Uart_InitIO+0xe4>)
-		USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
- 8003b2e:	9306      	str	r3, [sp, #24]
-		USART_InitStructure.USART_WordLength = USART_WordLength_8b;
- 8003b30:	9503      	str	r5, [sp, #12]
-		USART_InitStructure.USART_StopBits = USART_StopBits_1;
- 8003b32:	9504      	str	r5, [sp, #16]
-		USART_InitStructure.USART_Parity = USART_Parity_No ;
- 8003b34:	9505      	str	r5, [sp, #20]
-		USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
- 8003b36:	9507      	str	r5, [sp, #28]
-		USART_Init( USART2, &USART_InitStructure );
- 8003b38:	f7ff fcd2 	bl	80034e0 <USART_Init>
-		USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
  8003b3c:	0022      	movs	r2, r4
- 8003b3e:	4907      	ldr	r1, [pc, #28]	; (8003b5c <Uart_InitIO+0xdc>)
- 8003b40:	4808      	ldr	r0, [pc, #32]	; (8003b64 <Uart_InitIO+0xe4>)
+ 8003b3e:	4929      	ldr	r1, [pc, #164]	; (8003be4 <Uart_InitIO+0x100>)
+ 8003b40:	4826      	ldr	r0, [pc, #152]	; (8003bdc <Uart_InitIO+0xf8>)
  8003b42:	f7ff fec7 	bl	80038d4 <USART_ITConfig>
+		USART_Cmd(USART1, ENABLE);
+ 8003b46:	0029      	movs	r1, r5
+ 8003b48:	4824      	ldr	r0, [pc, #144]	; (8003bdc <Uart_InitIO+0xf8>)
+ 8003b4a:	f7ff fd3b 	bl	80035c4 <USART_Cmd>
+            break;
+ 8003b4e:	e7d4      	b.n	8003afa <Uart_InitIO+0x16>
+		RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
+ 8003b50:	2080      	movs	r0, #128	; 0x80
+ 8003b52:	0021      	movs	r1, r4
+ 8003b54:	0280      	lsls	r0, r0, #10
+ 8003b56:	f7fe f873 	bl	8001c40 <RCC_AHBPeriphClockCmd>
+		RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2,ENABLE);
+ 8003b5a:	2080      	movs	r0, #128	; 0x80
+ 8003b5c:	0021      	movs	r1, r4
+ 8003b5e:	0280      	lsls	r0, r0, #10
+ 8003b60:	f7fe f886 	bl	8001c70 <RCC_APB1PeriphClockCmd>
+		GPIO_PinAFConfig(GPIOA, GPIO_PinSource2, GPIO_AF_1);
+ 8003b64:	2090      	movs	r0, #144	; 0x90
+ 8003b66:	0022      	movs	r2, r4
+ 8003b68:	2102      	movs	r1, #2
+ 8003b6a:	05c0      	lsls	r0, r0, #23
+ 8003b6c:	f7fd fb64 	bl	8001238 <GPIO_PinAFConfig>
+		GPIO_PinAFConfig(GPIOA, GPIO_PinSource3, GPIO_AF_1);
+ 8003b70:	2090      	movs	r0, #144	; 0x90
+ 8003b72:	0022      	movs	r2, r4
+ 8003b74:	2103      	movs	r1, #3
+ 8003b76:	05c0      	lsls	r0, r0, #23
+ 8003b78:	f7fd fb5e 	bl	8001238 <GPIO_PinAFConfig>
+		GPIO_Init( GPIOA, &GPIO_InitStructure );
+ 8003b7c:	2090      	movs	r0, #144	; 0x90
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+ 8003b7e:	2500      	movs	r5, #0
+		GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3 | GPIO_Pin_2;
+ 8003b80:	260c      	movs	r6, #12
+		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+ 8003b82:	2302      	movs	r3, #2
+		GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3 | GPIO_Pin_2;
+ 8003b84:	a902      	add	r1, sp, #8
+		GPIO_Init( GPIOA, &GPIO_InitStructure );
+ 8003b86:	05c0      	lsls	r0, r0, #23
+		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+ 8003b88:	710b      	strb	r3, [r1, #4]
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+ 8003b8a:	718d      	strb	r5, [r1, #6]
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
+ 8003b8c:	714c      	strb	r4, [r1, #5]
+		GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3 | GPIO_Pin_2;
+ 8003b8e:	9602      	str	r6, [sp, #8]
+		GPIO_Init( GPIOA, &GPIO_InitStructure );
+ 8003b90:	f7fd fada 	bl	8001148 <GPIO_Init>
+		USART_InitStructure.USART_BaudRate = 9600;
+ 8003b94:	2396      	movs	r3, #150	; 0x96
+		USART_Init( USART2, &USART_InitStructure );
+ 8003b96:	a904      	add	r1, sp, #16
+		USART_InitStructure.USART_BaudRate = 9600;
+ 8003b98:	019b      	lsls	r3, r3, #6
+		USART_Init( USART2, &USART_InitStructure );
+ 8003b9a:	4813      	ldr	r0, [pc, #76]	; (8003be8 <Uart_InitIO+0x104>)
+		USART_InitStructure.USART_BaudRate = 9600;
+ 8003b9c:	9304      	str	r3, [sp, #16]
+		USART_InitStructure.USART_WordLength = USART_WordLength_8b;
+ 8003b9e:	9505      	str	r5, [sp, #20]
+		USART_InitStructure.USART_StopBits = USART_StopBits_1;
+ 8003ba0:	9506      	str	r5, [sp, #24]
+		USART_InitStructure.USART_Parity = USART_Parity_No ;
+ 8003ba2:	9507      	str	r5, [sp, #28]
+		USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+ 8003ba4:	9509      	str	r5, [sp, #36]	; 0x24
+		USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
+ 8003ba6:	9608      	str	r6, [sp, #32]
+		USART_Init( USART2, &USART_InitStructure );
+ 8003ba8:	f7ff fc9a 	bl	80034e0 <USART_Init>
+		USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
+ 8003bac:	0022      	movs	r2, r4
+ 8003bae:	490c      	ldr	r1, [pc, #48]	; (8003be0 <Uart_InitIO+0xfc>)
+ 8003bb0:	480d      	ldr	r0, [pc, #52]	; (8003be8 <Uart_InitIO+0x104>)
+ 8003bb2:	f7ff fe8f 	bl	80038d4 <USART_ITConfig>
 		USART_ITConfig(USART2, USART_IT_TC, DISABLE);
- 8003b46:	4906      	ldr	r1, [pc, #24]	; (8003b60 <Uart_InitIO+0xe0>)
- 8003b48:	4806      	ldr	r0, [pc, #24]	; (8003b64 <Uart_InitIO+0xe4>)
- 8003b4a:	002a      	movs	r2, r5
- 8003b4c:	f7ff fec2 	bl	80038d4 <USART_ITConfig>
+ 8003bb6:	002a      	movs	r2, r5
+ 8003bb8:	490a      	ldr	r1, [pc, #40]	; (8003be4 <Uart_InitIO+0x100>)
+ 8003bba:	480b      	ldr	r0, [pc, #44]	; (8003be8 <Uart_InitIO+0x104>)
+ 8003bbc:	f7ff fe8a 	bl	80038d4 <USART_ITConfig>
 		USART_Cmd(USART2, ENABLE);
- 8003b50:	0021      	movs	r1, r4
- 8003b52:	4804      	ldr	r0, [pc, #16]	; (8003b64 <Uart_InitIO+0xe4>)
- 8003b54:	e7cd      	b.n	8003af2 <Uart_InitIO+0x72>
- 8003b56:	46c0      	nop			; (mov r8, r8)
- 8003b58:	40013800 	.word	0x40013800
- 8003b5c:	00050105 	.word	0x00050105
- 8003b60:	00060106 	.word	0x00060106
- 8003b64:	40004400 	.word	0x40004400
-
-08003b68 <UART_ReConfig>:
+ 8003bc0:	0021      	movs	r1, r4
+ 8003bc2:	4809      	ldr	r0, [pc, #36]	; (8003be8 <Uart_InitIO+0x104>)
+ 8003bc4:	f7ff fcfe 	bl	80035c4 <USART_Cmd>
+		NVIC_InitStruct.NVIC_IRQChannel = USART2_IRQn;
+ 8003bc8:	231c      	movs	r3, #28
+ 8003bca:	a801      	add	r0, sp, #4
+ 8003bcc:	7003      	strb	r3, [r0, #0]
+		NVIC_InitStruct.NVIC_IRQChannelPriority = 0x03;
+ 8003bce:	3b19      	subs	r3, #25
+ 8003bd0:	7043      	strb	r3, [r0, #1]
+		NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
+ 8003bd2:	7084      	strb	r4, [r0, #2]
+		NVIC_Init(&NVIC_InitStruct);
+ 8003bd4:	f7fd fd7a 	bl	80016cc <NVIC_Init>
 }
- 8003b68:	4770      	bx	lr
+ 8003bd8:	e78f      	b.n	8003afa <Uart_InitIO+0x16>
+ 8003bda:	46c0      	nop			; (mov r8, r8)
+ 8003bdc:	40013800 	.word	0x40013800
+ 8003be0:	00050105 	.word	0x00050105
+ 8003be4:	00060106 	.word	0x00060106
+ 8003be8:	40004400 	.word	0x40004400
 
-08003b6a <Uart_Initialize>:
+08003bec <UART_ReConfig>:
+}
+ 8003bec:	4770      	bx	lr
+
+08003bee <Uart_Initialize>:
 {
- 8003b6a:	b510      	push	{r4, lr}
+ 8003bee:	b510      	push	{r4, lr}
    if (chan >= UART_NUM_CHANNELS) return;  // Invalid channel!
- 8003b6c:	2801      	cmp	r0, #1
- 8003b6e:	d818      	bhi.n	8003ba2 <Uart_Initialize+0x38>
+ 8003bf0:	2801      	cmp	r0, #1
+ 8003bf2:	d818      	bhi.n	8003c26 <Uart_Initialize+0x38>
    uart_chan[chan].rx_count = 0;    // Clear rx byte counter
- 8003b70:	241c      	movs	r4, #28
- 8003b72:	2200      	movs	r2, #0
- 8003b74:	4344      	muls	r4, r0
- 8003b76:	4b0f      	ldr	r3, [pc, #60]	; (8003bb4 <Uart_Initialize+0x4a>)
- 8003b78:	1919      	adds	r1, r3, r4
- 8003b7a:	808a      	strh	r2, [r1, #4]
+ 8003bf4:	241c      	movs	r4, #28
+ 8003bf6:	2200      	movs	r2, #0
+ 8003bf8:	4344      	muls	r4, r0
+ 8003bfa:	4b0f      	ldr	r3, [pc, #60]	; (8003c38 <Uart_Initialize+0x4a>)
+ 8003bfc:	1919      	adds	r1, r3, r4
+ 8003bfe:	808a      	strh	r2, [r1, #4]
    uart_chan[chan].rx_out = 0;      // Clear rx buffer output before read index
- 8003b7c:	804a      	strh	r2, [r1, #2]
+ 8003c00:	804a      	strh	r2, [r1, #2]
    uart_chan[chan].tx_count = 0;    // Clear tx byte counter
- 8003b7e:	820a      	strh	r2, [r1, #16]
+ 8003c02:	820a      	strh	r2, [r1, #16]
    uart_chan[chan].tx_in = 0;       // Clear tx buffer input before write index
- 8003b80:	818a      	strh	r2, [r1, #12]
+ 8003c04:	818a      	strh	r2, [r1, #12]
    uart_chan[chan].tx_out = 0;      // Clear tx buffer output before read index
- 8003b82:	81ca      	strh	r2, [r1, #14]
+ 8003c06:	81ca      	strh	r2, [r1, #14]
    uart_chan[chan].tx_progress = false;   // Clear tx in progress flag
- 8003b84:	760a      	strb	r2, [r1, #24]
- 8003b86:	2180      	movs	r1, #128	; 0x80
+ 8003c08:	760a      	strb	r2, [r1, #24]
+ 8003c0a:	2180      	movs	r1, #128	; 0x80
    uart_chan[chan].rx_in = 0;       // Clear rx buffer input before write index
- 8003b88:	52e2      	strh	r2, [r4, r3]
- 8003b8a:	0049      	lsls	r1, r1, #1
+ 8003c0c:	52e2      	strh	r2, [r4, r3]
+ 8003c0e:	0049      	lsls	r1, r1, #1
    switch (chan)
- 8003b8c:	2801      	cmp	r0, #1
- 8003b8e:	d009      	beq.n	8003ba4 <Uart_Initialize+0x3a>
+ 8003c10:	2801      	cmp	r0, #1
+ 8003c12:	d009      	beq.n	8003c28 <Uart_Initialize+0x3a>
          uart_chan[chan].rx_buf = uart0_rx_buf;
- 8003b90:	4809      	ldr	r0, [pc, #36]	; (8003bb8 <Uart_Initialize+0x4e>)
+ 8003c14:	4809      	ldr	r0, [pc, #36]	; (8003c3c <Uart_Initialize+0x4e>)
          uart_chan[chan].rx_size = UART0_RX_BUF_SIZE;
- 8003b92:	80d9      	strh	r1, [r3, #6]
+ 8003c16:	80d9      	strh	r1, [r3, #6]
          uart_chan[chan].rx_buf = uart0_rx_buf;
- 8003b94:	6098      	str	r0, [r3, #8]
+ 8003c18:	6098      	str	r0, [r3, #8]
          uart_chan[chan].tx_buf = uart0_tx_buf;
- 8003b96:	4809      	ldr	r0, [pc, #36]	; (8003bbc <Uart_Initialize+0x52>)
+ 8003c1a:	4809      	ldr	r0, [pc, #36]	; (8003c40 <Uart_Initialize+0x52>)
          uart_chan[chan].tx_size = UART0_TX_BUF_SIZE;
- 8003b98:	8259      	strh	r1, [r3, #18]
+ 8003c1c:	8259      	strh	r1, [r3, #18]
          uart_chan[chan].tx_buf = uart0_tx_buf;
- 8003b9a:	6158      	str	r0, [r3, #20]
+ 8003c1e:	6158      	str	r0, [r3, #20]
          Uart_InitIO(0);
- 8003b9c:	0010      	movs	r0, r2
+ 8003c20:	0010      	movs	r0, r2
          Uart_InitIO(1);
- 8003b9e:	f7ff ff6f 	bl	8003a80 <Uart_InitIO>
+ 8003c22:	f7ff ff5f 	bl	8003ae4 <Uart_InitIO>
 }
- 8003ba2:	bd10      	pop	{r4, pc}
+ 8003c26:	bd10      	pop	{r4, pc}
          uart_chan[chan].rx_buf = uart1_rx_buf;
- 8003ba4:	4a06      	ldr	r2, [pc, #24]	; (8003bc0 <Uart_Initialize+0x56>)
+ 8003c28:	4a06      	ldr	r2, [pc, #24]	; (8003c44 <Uart_Initialize+0x56>)
          uart_chan[chan].rx_size = UART1_RX_BUF_SIZE;
- 8003ba6:	8459      	strh	r1, [r3, #34]	; 0x22
+ 8003c2a:	8459      	strh	r1, [r3, #34]	; 0x22
          uart_chan[chan].rx_buf = uart1_rx_buf;
- 8003ba8:	625a      	str	r2, [r3, #36]	; 0x24
+ 8003c2c:	625a      	str	r2, [r3, #36]	; 0x24
          uart_chan[chan].tx_buf = uart1_tx_buf;
- 8003baa:	4a06      	ldr	r2, [pc, #24]	; (8003bc4 <Uart_Initialize+0x5a>)
+ 8003c2e:	4a06      	ldr	r2, [pc, #24]	; (8003c48 <Uart_Initialize+0x5a>)
          uart_chan[chan].tx_size = UART1_TX_BUF_SIZE;
- 8003bac:	85d9      	strh	r1, [r3, #46]	; 0x2e
+ 8003c30:	85d9      	strh	r1, [r3, #46]	; 0x2e
          uart_chan[chan].tx_buf = uart1_tx_buf;
- 8003bae:	631a      	str	r2, [r3, #48]	; 0x30
- 8003bb0:	e7f5      	b.n	8003b9e <Uart_Initialize+0x34>
- 8003bb2:	46c0      	nop			; (mov r8, r8)
- 8003bb4:	20000448 	.word	0x20000448
- 8003bb8:	20000044 	.word	0x20000044
- 8003bbc:	20000144 	.word	0x20000144
- 8003bc0:	20000244 	.word	0x20000244
- 8003bc4:	20000344 	.word	0x20000344
+ 8003c32:	631a      	str	r2, [r3, #48]	; 0x30
+ 8003c34:	e7f5      	b.n	8003c22 <Uart_Initialize+0x34>
+ 8003c36:	46c0      	nop			; (mov r8, r8)
+ 8003c38:	20000448 	.word	0x20000448
+ 8003c3c:	20000044 	.word	0x20000044
+ 8003c40:	20000144 	.word	0x20000144
+ 8003c44:	20000244 	.word	0x20000244
+ 8003c48:	20000344 	.word	0x20000344
 
-08003bc8 <Uart_Get_Char>:
+08003c4c <Uart_Get_Char>:
 {
- 8003bc8:	b570      	push	{r4, r5, r6, lr}
- 8003bca:	0006      	movs	r6, r0
+ 8003c4c:	b570      	push	{r4, r5, r6, lr}
+ 8003c4e:	0006      	movs	r6, r0
         return false; // Invalid channel!
- 8003bcc:	2000      	movs	r0, #0
+ 8003c50:	2000      	movs	r0, #0
     if (chan >= UART_NUM_CHANNELS) 
- 8003bce:	2e01      	cmp	r6, #1
- 8003bd0:	d81a      	bhi.n	8003c08 <Uart_Get_Char+0x40>
+ 8003c52:	2e01      	cmp	r6, #1
+ 8003c54:	d81a      	bhi.n	8003c8c <Uart_Get_Char+0x40>
     if (!ptr) 
- 8003bd2:	4281      	cmp	r1, r0
- 8003bd4:	d018      	beq.n	8003c08 <Uart_Get_Char+0x40>
+ 8003c56:	4281      	cmp	r1, r0
+ 8003c58:	d018      	beq.n	8003c8c <Uart_Get_Char+0x40>
   This function disables IRQ interrupts by setting the I-bit in the CPSR.
   Can only be executed in Privileged modes.
  */
 __attribute__( ( always_inline ) ) __STATIC_INLINE void __disable_irq(void)
 {
   __ASM volatile ("cpsid i" : : : "memory");
- 8003bd6:	b672      	cpsid	i
+ 8003c5a:	b672      	cpsid	i
     if(uart_chan[chan].rx_in != uart_chan[chan].rx_out)// Rx buffer not empty
- 8003bd8:	251c      	movs	r5, #28
- 8003bda:	4375      	muls	r5, r6
- 8003bdc:	4a0b      	ldr	r2, [pc, #44]	; (8003c0c <Uart_Get_Char+0x44>)
- 8003bde:	1954      	adds	r4, r2, r5
- 8003be0:	8863      	ldrh	r3, [r4, #2]
- 8003be2:	5aad      	ldrh	r5, [r5, r2]
- 8003be4:	429d      	cmp	r5, r3
- 8003be6:	d00e      	beq.n	8003c06 <Uart_Get_Char+0x3e>
+ 8003c5c:	251c      	movs	r5, #28
+ 8003c5e:	4375      	muls	r5, r6
+ 8003c60:	4a0b      	ldr	r2, [pc, #44]	; (8003c90 <Uart_Get_Char+0x44>)
+ 8003c62:	1954      	adds	r4, r2, r5
+ 8003c64:	8863      	ldrh	r3, [r4, #2]
+ 8003c66:	5aad      	ldrh	r5, [r5, r2]
+ 8003c68:	429d      	cmp	r5, r3
+ 8003c6a:	d00e      	beq.n	8003c8a <Uart_Get_Char+0x3e>
         uart_chan[chan].rx_out++;     // Increment rx buffe output index
- 8003be8:	3301      	adds	r3, #1
+ 8003c6c:	3301      	adds	r3, #1
         if ((uart_chan[chan].rx_out) >= (uart_chan[chan].rx_size))
- 8003bea:	88e5      	ldrh	r5, [r4, #6]
+ 8003c6e:	88e5      	ldrh	r5, [r4, #6]
         uart_chan[chan].rx_out++;     // Increment rx buffe output index
- 8003bec:	b29b      	uxth	r3, r3
- 8003bee:	8063      	strh	r3, [r4, #2]
+ 8003c70:	b29b      	uxth	r3, r3
+ 8003c72:	8063      	strh	r3, [r4, #2]
         if ((uart_chan[chan].rx_out) >= (uart_chan[chan].rx_size))
- 8003bf0:	429d      	cmp	r5, r3
- 8003bf2:	d800      	bhi.n	8003bf6 <Uart_Get_Char+0x2e>
+ 8003c74:	429d      	cmp	r5, r3
+ 8003c76:	d800      	bhi.n	8003c7a <Uart_Get_Char+0x2e>
             uart_chan[chan].rx_out = 0; // Wrap index
- 8003bf4:	8060      	strh	r0, [r4, #2]
+ 8003c78:	8060      	strh	r0, [r4, #2]
         *ptr = uart_chan[chan].rx_buf[uart_chan[chan].rx_out]; // Store read data
- 8003bf6:	201c      	movs	r0, #28
- 8003bf8:	4346      	muls	r6, r0
- 8003bfa:	1992      	adds	r2, r2, r6
- 8003bfc:	8853      	ldrh	r3, [r2, #2]
- 8003bfe:	6892      	ldr	r2, [r2, #8]
+ 8003c7a:	201c      	movs	r0, #28
+ 8003c7c:	4346      	muls	r6, r0
+ 8003c7e:	1992      	adds	r2, r2, r6
+ 8003c80:	8853      	ldrh	r3, [r2, #2]
+ 8003c82:	6892      	ldr	r2, [r2, #8]
         ret = true;
- 8003c00:	381b      	subs	r0, #27
+ 8003c84:	381b      	subs	r0, #27
         *ptr = uart_chan[chan].rx_buf[uart_chan[chan].rx_out]; // Store read data
- 8003c02:	5cd3      	ldrb	r3, [r2, r3]
- 8003c04:	700b      	strb	r3, [r1, #0]
+ 8003c86:	5cd3      	ldrb	r3, [r2, r3]
+ 8003c88:	700b      	strb	r3, [r1, #0]
   __ASM volatile ("cpsie i" : : : "memory");
- 8003c06:	b662      	cpsie	i
+ 8003c8a:	b662      	cpsie	i
 }
- 8003c08:	bd70      	pop	{r4, r5, r6, pc}
- 8003c0a:	46c0      	nop			; (mov r8, r8)
- 8003c0c:	20000448 	.word	0x20000448
+ 8003c8c:	bd70      	pop	{r4, r5, r6, pc}
+ 8003c8e:	46c0      	nop			; (mov r8, r8)
+ 8003c90:	20000448 	.word	0x20000448
 
-08003c10 <Uart_Put_Char>:
+08003c94 <Uart_Put_Char>:
 {
- 8003c10:	b570      	push	{r4, r5, r6, lr}
- 8003c12:	0004      	movs	r4, r0
+ 8003c94:	b570      	push	{r4, r5, r6, lr}
+ 8003c96:	0004      	movs	r4, r0
    	return false; // Invalid channel!
- 8003c14:	2600      	movs	r6, #0
+ 8003c98:	2600      	movs	r6, #0
    if (chan >= UART_NUM_CHANNELS) 
- 8003c16:	2801      	cmp	r0, #1
- 8003c18:	d829      	bhi.n	8003c6e <Uart_Put_Char+0x5e>
-  __ASM volatile ("cpsid i" : : : "memory");
- 8003c1a:	b672      	cpsid	i
+ 8003c9a:	2801      	cmp	r0, #1
+ 8003c9c:	d827      	bhi.n	8003cee <Uart_Put_Char+0x5a>
    if (uart_chan[chan].tx_count < (uart_chan[chan].tx_size))
- 8003c1c:	231c      	movs	r3, #28
- 8003c1e:	4363      	muls	r3, r4
- 8003c20:	4817      	ldr	r0, [pc, #92]	; (8003c80 <Uart_Put_Char+0x70>)
- 8003c22:	18c3      	adds	r3, r0, r3
- 8003c24:	8a1a      	ldrh	r2, [r3, #16]
- 8003c26:	8a5d      	ldrh	r5, [r3, #18]
- 8003c28:	42aa      	cmp	r2, r5
- 8003c2a:	d20e      	bcs.n	8003c4a <Uart_Put_Char+0x3a>
+ 8003c9e:	231c      	movs	r3, #28
+ 8003ca0:	4363      	muls	r3, r4
+ 8003ca2:	4817      	ldr	r0, [pc, #92]	; (8003d00 <Uart_Put_Char+0x6c>)
+ 8003ca4:	18c3      	adds	r3, r0, r3
+ 8003ca6:	8a1a      	ldrh	r2, [r3, #16]
+ 8003ca8:	8a5d      	ldrh	r5, [r3, #18]
+ 8003caa:	42aa      	cmp	r2, r5
+ 8003cac:	d20e      	bcs.n	8003ccc <Uart_Put_Char+0x38>
       uart_chan[chan].tx_count++;   // Increment tx buffer byte count
- 8003c2c:	3201      	adds	r2, #1
- 8003c2e:	821a      	strh	r2, [r3, #16]
+ 8003cae:	3201      	adds	r2, #1
+ 8003cb0:	821a      	strh	r2, [r3, #16]
       uart_chan[chan].tx_in++;      // Increment tx buffer input index
- 8003c30:	899a      	ldrh	r2, [r3, #12]
- 8003c32:	3201      	adds	r2, #1
- 8003c34:	b292      	uxth	r2, r2
+ 8003cb2:	899a      	ldrh	r2, [r3, #12]
+ 8003cb4:	3201      	adds	r2, #1
+ 8003cb6:	b292      	uxth	r2, r2
       if ((uart_chan[chan].tx_in) >= (uart_chan[chan].tx_size))
- 8003c36:	4295      	cmp	r5, r2
- 8003c38:	d91b      	bls.n	8003c72 <Uart_Put_Char+0x62>
+ 8003cb8:	4295      	cmp	r5, r2
+ 8003cba:	d91a      	bls.n	8003cf2 <Uart_Put_Char+0x5e>
       uart_chan[chan].tx_in++;      // Increment tx buffer input index
- 8003c3a:	819a      	strh	r2, [r3, #12]
+ 8003cbc:	819a      	strh	r2, [r3, #12]
       uart_chan[chan].tx_buf[uart_chan[chan].tx_in] = data; // Copy byte to tx buffer
- 8003c3c:	231c      	movs	r3, #28
+ 8003cbe:	231c      	movs	r3, #28
       ret = true;
- 8003c3e:	2601      	movs	r6, #1
+ 8003cc0:	2601      	movs	r6, #1
       uart_chan[chan].tx_buf[uart_chan[chan].tx_in] = data; // Copy byte to tx buffer
- 8003c40:	4363      	muls	r3, r4
- 8003c42:	18c3      	adds	r3, r0, r3
- 8003c44:	899a      	ldrh	r2, [r3, #12]
- 8003c46:	695b      	ldr	r3, [r3, #20]
- 8003c48:	5499      	strb	r1, [r3, r2]
+ 8003cc2:	4363      	muls	r3, r4
+ 8003cc4:	18c3      	adds	r3, r0, r3
+ 8003cc6:	899a      	ldrh	r2, [r3, #12]
+ 8003cc8:	695b      	ldr	r3, [r3, #20]
+ 8003cca:	5499      	strb	r1, [r3, r2]
    if (false == uart_chan[chan].tx_progress) // Send first byte. Interrupts do the rest.
- 8003c4a:	251c      	movs	r5, #28
- 8003c4c:	4365      	muls	r5, r4
- 8003c4e:	1945      	adds	r5, r0, r5
- 8003c50:	7e2b      	ldrb	r3, [r5, #24]
- 8003c52:	2b00      	cmp	r3, #0
- 8003c54:	d10a      	bne.n	8003c6c <Uart_Put_Char+0x5c>
+ 8003ccc:	251c      	movs	r5, #28
+ 8003cce:	4365      	muls	r5, r4
+ 8003cd0:	1945      	adds	r5, r0, r5
+ 8003cd2:	7e2b      	ldrb	r3, [r5, #24]
+ 8003cd4:	2b00      	cmp	r3, #0
+ 8003cd6:	d10a      	bne.n	8003cee <Uart_Put_Char+0x5a>
       u_do_tx(chan);          // Send to hardware
- 8003c56:	0020      	movs	r0, r4
- 8003c58:	f7ff feea 	bl	8003a30 <u_do_tx>
+ 8003cd8:	0020      	movs	r0, r4
+ 8003cda:	f7ff fedb 	bl	8003a94 <u_do_tx>
       uart_chan[chan].tx_progress = true;    // Flag tx in progress
- 8003c5c:	2201      	movs	r2, #1
- 8003c5e:	762a      	strb	r2, [r5, #24]
+ 8003cde:	2201      	movs	r2, #1
+ 8003ce0:	762a      	strb	r2, [r5, #24]
       switch(chan)
- 8003c60:	4294      	cmp	r4, r2
- 8003c62:	d008      	beq.n	8003c76 <Uart_Put_Char+0x66>
+ 8003ce2:	4294      	cmp	r4, r2
+ 8003ce4:	d007      	beq.n	8003cf6 <Uart_Put_Char+0x62>
             USART_ITConfig(USART1, USART_IT_TC, ENABLE);
- 8003c64:	4907      	ldr	r1, [pc, #28]	; (8003c84 <Uart_Put_Char+0x74>)
- 8003c66:	4808      	ldr	r0, [pc, #32]	; (8003c88 <Uart_Put_Char+0x78>)
+ 8003ce6:	4907      	ldr	r1, [pc, #28]	; (8003d04 <Uart_Put_Char+0x70>)
+ 8003ce8:	4807      	ldr	r0, [pc, #28]	; (8003d08 <Uart_Put_Char+0x74>)
             USART_ITConfig(USART2, USART_IT_TC, ENABLE);
- 8003c68:	f7ff fe34 	bl	80038d4 <USART_ITConfig>
-  __ASM volatile ("cpsie i" : : : "memory");
- 8003c6c:	b662      	cpsie	i
+ 8003cea:	f7ff fdf3 	bl	80038d4 <USART_ITConfig>
 }
- 8003c6e:	0030      	movs	r0, r6
- 8003c70:	bd70      	pop	{r4, r5, r6, pc}
+ 8003cee:	0030      	movs	r0, r6
+ 8003cf0:	bd70      	pop	{r4, r5, r6, pc}
          uart_chan[chan].tx_in = 0; // Wrap index
- 8003c72:	819e      	strh	r6, [r3, #12]
- 8003c74:	e7e2      	b.n	8003c3c <Uart_Put_Char+0x2c>
+ 8003cf2:	819e      	strh	r6, [r3, #12]
+ 8003cf4:	e7e3      	b.n	8003cbe <Uart_Put_Char+0x2a>
             USART_ITConfig(USART2, USART_IT_TC, ENABLE);
- 8003c76:	0022      	movs	r2, r4
- 8003c78:	4902      	ldr	r1, [pc, #8]	; (8003c84 <Uart_Put_Char+0x74>)
- 8003c7a:	4804      	ldr	r0, [pc, #16]	; (8003c8c <Uart_Put_Char+0x7c>)
- 8003c7c:	e7f4      	b.n	8003c68 <Uart_Put_Char+0x58>
- 8003c7e:	46c0      	nop			; (mov r8, r8)
- 8003c80:	20000448 	.word	0x20000448
- 8003c84:	00060106 	.word	0x00060106
- 8003c88:	40013800 	.word	0x40013800
- 8003c8c:	40004400 	.word	0x40004400
+ 8003cf6:	0022      	movs	r2, r4
+ 8003cf8:	4902      	ldr	r1, [pc, #8]	; (8003d04 <Uart_Put_Char+0x70>)
+ 8003cfa:	4804      	ldr	r0, [pc, #16]	; (8003d0c <Uart_Put_Char+0x78>)
+ 8003cfc:	e7f5      	b.n	8003cea <Uart_Put_Char+0x56>
+ 8003cfe:	46c0      	nop			; (mov r8, r8)
+ 8003d00:	20000448 	.word	0x20000448
+ 8003d04:	00060106 	.word	0x00060106
+ 8003d08:	40013800 	.word	0x40013800
+ 8003d0c:	40004400 	.word	0x40004400
 
-08003c90 <UART_TX_ISR>:
+08003d10 <UART_TX_ISR>:
 *  Parameters: Channel
 *     Returns: None
 * Description: UART transmit Interrupt Service Routine
 *******************************************************************************/
 void UART_TX_ISR(uint8_t chan)      
 {
- 8003c90:	b510      	push	{r4, lr}
+ 8003d10:	b510      	push	{r4, lr}
     USART_TypeDef* tmp_USARTx;
 
     switch(chan)
- 8003c92:	2800      	cmp	r0, #0
- 8003c94:	d00d      	beq.n	8003cb2 <UART_TX_ISR+0x22>
- 8003c96:	2801      	cmp	r0, #1
- 8003c98:	d10a      	bne.n	8003cb0 <UART_TX_ISR+0x20>
+ 8003d12:	2800      	cmp	r0, #0
+ 8003d14:	d00d      	beq.n	8003d32 <UART_TX_ISR+0x22>
+ 8003d16:	2801      	cmp	r0, #1
+ 8003d18:	d10a      	bne.n	8003d30 <UART_TX_ISR+0x20>
     {
         case 0:
             tmp_USARTx = USART1;
             break;
         case 1:
             tmp_USARTx = USART2;
- 8003c9a:	4c0a      	ldr	r4, [pc, #40]	; (8003cc4 <UART_TX_ISR+0x34>)
+ 8003d1a:	4c0a      	ldr	r4, [pc, #40]	; (8003d44 <UART_TX_ISR+0x34>)
         default:
 	   return;
             break;
     }
 
     if (uart_chan[chan].tx_in != uart_chan[chan].tx_out) // Any bytes to send?
- 8003c9c:	221c      	movs	r2, #28
- 8003c9e:	4342      	muls	r2, r0
- 8003ca0:	4b09      	ldr	r3, [pc, #36]	; (8003cc8 <UART_TX_ISR+0x38>)
- 8003ca2:	189b      	adds	r3, r3, r2
- 8003ca4:	8999      	ldrh	r1, [r3, #12]
- 8003ca6:	89da      	ldrh	r2, [r3, #14]
- 8003ca8:	4291      	cmp	r1, r2
- 8003caa:	d004      	beq.n	8003cb6 <UART_TX_ISR+0x26>
+ 8003d1c:	221c      	movs	r2, #28
+ 8003d1e:	4342      	muls	r2, r0
+ 8003d20:	4b09      	ldr	r3, [pc, #36]	; (8003d48 <UART_TX_ISR+0x38>)
+ 8003d22:	189b      	adds	r3, r3, r2
+ 8003d24:	8999      	ldrh	r1, [r3, #12]
+ 8003d26:	89da      	ldrh	r2, [r3, #14]
+ 8003d28:	4291      	cmp	r1, r2
+ 8003d2a:	d004      	beq.n	8003d36 <UART_TX_ISR+0x26>
     {
         u_do_tx(chan);       // Send to hardware
- 8003cac:	f7ff fec0 	bl	8003a30 <u_do_tx>
+ 8003d2c:	f7ff feb2 	bl	8003a94 <u_do_tx>
     else
     {
         uart_chan[chan].tx_progress = false;     // Disable transmit
         USART_ITConfig(tmp_USARTx, USART_IT_TC, DISABLE);
     }
 }
- 8003cb0:	bd10      	pop	{r4, pc}
+ 8003d30:	bd10      	pop	{r4, pc}
             tmp_USARTx = USART1;
- 8003cb2:	4c06      	ldr	r4, [pc, #24]	; (8003ccc <UART_TX_ISR+0x3c>)
- 8003cb4:	e7f2      	b.n	8003c9c <UART_TX_ISR+0xc>
+ 8003d32:	4c06      	ldr	r4, [pc, #24]	; (8003d4c <UART_TX_ISR+0x3c>)
+ 8003d34:	e7f2      	b.n	8003d1c <UART_TX_ISR+0xc>
         uart_chan[chan].tx_progress = false;     // Disable transmit
- 8003cb6:	2200      	movs	r2, #0
+ 8003d36:	2200      	movs	r2, #0
         USART_ITConfig(tmp_USARTx, USART_IT_TC, DISABLE);
- 8003cb8:	4905      	ldr	r1, [pc, #20]	; (8003cd0 <UART_TX_ISR+0x40>)
+ 8003d38:	4905      	ldr	r1, [pc, #20]	; (8003d50 <UART_TX_ISR+0x40>)
         uart_chan[chan].tx_progress = false;     // Disable transmit
- 8003cba:	761a      	strb	r2, [r3, #24]
+ 8003d3a:	761a      	strb	r2, [r3, #24]
         USART_ITConfig(tmp_USARTx, USART_IT_TC, DISABLE);
- 8003cbc:	0020      	movs	r0, r4
- 8003cbe:	f7ff fe09 	bl	80038d4 <USART_ITConfig>
- 8003cc2:	e7f5      	b.n	8003cb0 <UART_TX_ISR+0x20>
- 8003cc4:	40004400 	.word	0x40004400
- 8003cc8:	20000448 	.word	0x20000448
- 8003ccc:	40013800 	.word	0x40013800
- 8003cd0:	00060106 	.word	0x00060106
+ 8003d3c:	0020      	movs	r0, r4
+ 8003d3e:	f7ff fdc9 	bl	80038d4 <USART_ITConfig>
+ 8003d42:	e7f5      	b.n	8003d30 <UART_TX_ISR+0x20>
+ 8003d44:	40004400 	.word	0x40004400
+ 8003d48:	20000448 	.word	0x20000448
+ 8003d4c:	40013800 	.word	0x40013800
+ 8003d50:	00060106 	.word	0x00060106
 
-08003cd4 <UART_RX_ISR>:
+08003d54 <UART_RX_ISR>:
 *  Parameters: Channel
 *     Returns: None
 * Description: UART recieve Interrupt Service Routine
 *******************************************************************************/
 void UART_RX_ISR(uint8_t chan)
 {
- 8003cd4:	b5f7      	push	{r0, r1, r2, r4, r5, r6, r7, lr}
+ 8003d54:	b5f7      	push	{r0, r1, r2, r4, r5, r6, r7, lr}
     volatile uint8_t data;
     volatile uint8_t err;
     USART_TypeDef* tmp_USARTx;
 
     if (chan >= UART_NUM_CHANNELS)
- 8003cd6:	2801      	cmp	r0, #1
- 8003cd8:	d823      	bhi.n	8003d22 <UART_RX_ISR+0x4e>
+ 8003d56:	2801      	cmp	r0, #1
+ 8003d58:	d823      	bhi.n	8003da2 <UART_RX_ISR+0x4e>
         return;  // Invalid channel!
 
     switch(chan)
- 8003cda:	d023      	beq.n	8003d24 <UART_RX_ISR+0x50>
+ 8003d5a:	d023      	beq.n	8003da4 <UART_RX_ISR+0x50>
     {
         case 0:
             tmp_USARTx = USART1;
- 8003cdc:	4b12      	ldr	r3, [pc, #72]	; (8003d28 <UART_RX_ISR+0x54>)
+ 8003d5c:	4b12      	ldr	r3, [pc, #72]	; (8003da8 <UART_RX_ISR+0x54>)
             break;
         default:
             break;
     }
 
     err = tmp_USARTx->ISR;
- 8003cde:	4669      	mov	r1, sp
- 8003ce0:	69da      	ldr	r2, [r3, #28]
+ 8003d5e:	4669      	mov	r1, sp
+ 8003d60:	69da      	ldr	r2, [r3, #28]
 
     /* Read one byte from the receive data register */
     data = (uint16_t)(tmp_USARTx->RDR & (uint16_t)0x01FF);
- 8003ce2:	1d8c      	adds	r4, r1, #6
+ 8003d62:	1d8c      	adds	r4, r1, #6
     err = tmp_USARTx->ISR;
- 8003ce4:	b2d2      	uxtb	r2, r2
- 8003ce6:	71ca      	strb	r2, [r1, #7]
+ 8003d64:	b2d2      	uxtb	r2, r2
+ 8003d66:	71ca      	strb	r2, [r1, #7]
     data = (uint16_t)(tmp_USARTx->RDR & (uint16_t)0x01FF);
- 8003ce8:	8c9b      	ldrh	r3, [r3, #36]	; 0x24
- 8003cea:	b2db      	uxtb	r3, r3
- 8003cec:	7023      	strb	r3, [r4, #0]
+ 8003d68:	8c9b      	ldrh	r3, [r3, #36]	; 0x24
+ 8003d6a:	b2db      	uxtb	r3, r3
+ 8003d6c:	7023      	strb	r3, [r4, #0]
 
     if(0==((UART_ERR_FRAME | UART_ERR_PARITY)&err))
- 8003cee:	2303      	movs	r3, #3
- 8003cf0:	79ce      	ldrb	r6, [r1, #7]
- 8003cf2:	401e      	ands	r6, r3
- 8003cf4:	d115      	bne.n	8003d22 <UART_RX_ISR+0x4e>
+ 8003d6e:	2303      	movs	r3, #3
+ 8003d70:	79ce      	ldrb	r6, [r1, #7]
+ 8003d72:	401e      	ands	r6, r3
+ 8003d74:	d115      	bne.n	8003da2 <UART_RX_ISR+0x4e>
     {
         //uart_chan[chan].rx_count++;
         uart_chan[chan].rx_in++;
- 8003cf6:	221c      	movs	r2, #28
- 8003cf8:	0015      	movs	r5, r2
- 8003cfa:	4345      	muls	r5, r0
- 8003cfc:	4b0b      	ldr	r3, [pc, #44]	; (8003d2c <UART_RX_ISR+0x58>)
- 8003cfe:	5ae9      	ldrh	r1, [r5, r3]
+ 8003d76:	221c      	movs	r2, #28
+ 8003d78:	0015      	movs	r5, r2
+ 8003d7a:	4345      	muls	r5, r0
+ 8003d7c:	4b0b      	ldr	r3, [pc, #44]	; (8003dac <UART_RX_ISR+0x58>)
+ 8003d7e:	5ae9      	ldrh	r1, [r5, r3]
         if ((uart_chan[chan].rx_in) >= (uart_chan[chan].rx_size))
- 8003d00:	195f      	adds	r7, r3, r5
+ 8003d80:	195f      	adds	r7, r3, r5
         uart_chan[chan].rx_in++;
- 8003d02:	3101      	adds	r1, #1
- 8003d04:	b289      	uxth	r1, r1
- 8003d06:	52e9      	strh	r1, [r5, r3]
+ 8003d82:	3101      	adds	r1, #1
+ 8003d84:	b289      	uxth	r1, r1
+ 8003d86:	52e9      	strh	r1, [r5, r3]
         if ((uart_chan[chan].rx_in) >= (uart_chan[chan].rx_size))
- 8003d08:	88ff      	ldrh	r7, [r7, #6]
- 8003d0a:	428f      	cmp	r7, r1
- 8003d0c:	d800      	bhi.n	8003d10 <UART_RX_ISR+0x3c>
+ 8003d88:	88ff      	ldrh	r7, [r7, #6]
+ 8003d8a:	428f      	cmp	r7, r1
+ 8003d8c:	d800      	bhi.n	8003d90 <UART_RX_ISR+0x3c>
         {
             uart_chan[chan].rx_in = 0; // Wrap index
- 8003d0e:	52ee      	strh	r6, [r5, r3]
+ 8003d8e:	52ee      	strh	r6, [r5, r3]
         }
         if(uart_chan[chan].rx_in != uart_chan[chan].rx_out)
- 8003d10:	4350      	muls	r0, r2
- 8003d12:	5a1a      	ldrh	r2, [r3, r0]
- 8003d14:	181b      	adds	r3, r3, r0
- 8003d16:	8859      	ldrh	r1, [r3, #2]
- 8003d18:	4291      	cmp	r1, r2
- 8003d1a:	d002      	beq.n	8003d22 <UART_RX_ISR+0x4e>
+ 8003d90:	4350      	muls	r0, r2
+ 8003d92:	5a1a      	ldrh	r2, [r3, r0]
+ 8003d94:	181b      	adds	r3, r3, r0
+ 8003d96:	8859      	ldrh	r1, [r3, #2]
+ 8003d98:	4291      	cmp	r1, r2
+ 8003d9a:	d002      	beq.n	8003da2 <UART_RX_ISR+0x4e>
         {
             uart_chan[chan].rx_buf[uart_chan[chan].rx_in] = data; // Copy data to receive buffer
- 8003d1c:	7821      	ldrb	r1, [r4, #0]
- 8003d1e:	689b      	ldr	r3, [r3, #8]
- 8003d20:	5499      	strb	r1, [r3, r2]
+ 8003d9c:	7821      	ldrb	r1, [r4, #0]
+ 8003d9e:	689b      	ldr	r3, [r3, #8]
+ 8003da0:	5499      	strb	r1, [r3, r2]
     {
 
     }
     //if(chan == UART_KLINE_CHANNEL)
         //DEBUG_PRINT1( DEBUG_MEDIUM, "%c\r\n", uart_chan[chan].rx_buf[uart_chan[chan].rx_in]);
 }
- 8003d22:	bdf7      	pop	{r0, r1, r2, r4, r5, r6, r7, pc}
+ 8003da2:	bdf7      	pop	{r0, r1, r2, r4, r5, r6, r7, pc}
             tmp_USARTx = USART2;
- 8003d24:	4b02      	ldr	r3, [pc, #8]	; (8003d30 <UART_RX_ISR+0x5c>)
- 8003d26:	e7da      	b.n	8003cde <UART_RX_ISR+0xa>
- 8003d28:	40013800 	.word	0x40013800
- 8003d2c:	20000448 	.word	0x20000448
- 8003d30:	40004400 	.word	0x40004400
+ 8003da4:	4b02      	ldr	r3, [pc, #8]	; (8003db0 <UART_RX_ISR+0x5c>)
+ 8003da6:	e7da      	b.n	8003d5e <UART_RX_ISR+0xa>
+ 8003da8:	40013800 	.word	0x40013800
+ 8003dac:	20000448 	.word	0x20000448
+ 8003db0:	40004400 	.word	0x40004400
 
-08003d34 <UART_ERR_ISR>:
+08003db4 <UART_ERR_ISR>:
 void UART_ERR_ISR(uint8_t chan)
 {
 
     USART_TypeDef* tmp_USARTx;
 
     switch(chan)
- 8003d34:	2800      	cmp	r0, #0
- 8003d36:	d00a      	beq.n	8003d4e <UART_ERR_ISR+0x1a>
- 8003d38:	2801      	cmp	r0, #1
- 8003d3a:	d107      	bne.n	8003d4c <UART_ERR_ISR+0x18>
+ 8003db4:	2800      	cmp	r0, #0
+ 8003db6:	d00a      	beq.n	8003dce <UART_ERR_ISR+0x1a>
+ 8003db8:	2801      	cmp	r0, #1
+ 8003dba:	d107      	bne.n	8003dcc <UART_ERR_ISR+0x18>
     {
         case 0:
             tmp_USARTx = USART1;
             break;
         case 1:
             tmp_USARTx = USART2;
- 8003d3c:	4b05      	ldr	r3, [pc, #20]	; (8003d54 <UART_ERR_ISR+0x20>)
+ 8003dbc:	4b05      	ldr	r3, [pc, #20]	; (8003dd4 <UART_ERR_ISR+0x20>)
 	    return;
             break;
     }
 
     //clear error
     err = tmp_USARTx->ISR;
- 8003d3e:	69da      	ldr	r2, [r3, #28]
- 8003d40:	4905      	ldr	r1, [pc, #20]	; (8003d58 <UART_ERR_ISR+0x24>)
- 8003d42:	b2d2      	uxtb	r2, r2
- 8003d44:	700a      	strb	r2, [r1, #0]
+ 8003dbe:	69da      	ldr	r2, [r3, #28]
+ 8003dc0:	4905      	ldr	r1, [pc, #20]	; (8003dd8 <UART_ERR_ISR+0x24>)
+ 8003dc2:	b2d2      	uxtb	r2, r2
+ 8003dc4:	700a      	strb	r2, [r1, #0]
     data = (uint16_t)(tmp_USARTx->RDR & (uint16_t)0x01FF);
- 8003d46:	8c9b      	ldrh	r3, [r3, #36]	; 0x24
- 8003d48:	b2db      	uxtb	r3, r3
- 8003d4a:	704b      	strb	r3, [r1, #1]
+ 8003dc6:	8c9b      	ldrh	r3, [r3, #36]	; 0x24
+ 8003dc8:	b2db      	uxtb	r3, r3
+ 8003dca:	704b      	strb	r3, [r1, #1]
 }
- 8003d4c:	4770      	bx	lr
+ 8003dcc:	4770      	bx	lr
             tmp_USARTx = USART1;
- 8003d4e:	4b03      	ldr	r3, [pc, #12]	; (8003d5c <UART_ERR_ISR+0x28>)
- 8003d50:	e7f5      	b.n	8003d3e <UART_ERR_ISR+0xa>
- 8003d52:	46c0      	nop			; (mov r8, r8)
- 8003d54:	40004400 	.word	0x40004400
- 8003d58:	20000444 	.word	0x20000444
- 8003d5c:	40013800 	.word	0x40013800
+ 8003dce:	4b03      	ldr	r3, [pc, #12]	; (8003ddc <UART_ERR_ISR+0x28>)
+ 8003dd0:	e7f5      	b.n	8003dbe <UART_ERR_ISR+0xa>
+ 8003dd2:	46c0      	nop			; (mov r8, r8)
+ 8003dd4:	40004400 	.word	0x40004400
+ 8003dd8:	20000444 	.word	0x20000444
+ 8003ddc:	40013800 	.word	0x40013800
 
-08003d60 <UART_Transmit>:
+08003de0 <UART_Transmit>:
 *               transmit is successfully sent/buffered. If not, task should sleep to allow
 *               Tx buffer to allow room for byte to be buffered.
 *              Tx Buffer size should be configured accordingly
 *******************************************************************************/
 extern uint8_t UART_Transmit(uint8_t channel, const uint8_t* tx_buf, uint8_t bytes)
 {
- 8003d60:	b5f7      	push	{r0, r1, r2, r4, r5, r6, r7, lr}
- 8003d62:	0007      	movs	r7, r0
- 8003d64:	000e      	movs	r6, r1
+ 8003de0:	b5f7      	push	{r0, r1, r2, r4, r5, r6, r7, lr}
+ 8003de2:	0007      	movs	r7, r0
+ 8003de4:	000e      	movs	r6, r1
     uint8_t ret = 0;
     int i;
 
     for (i=0; i < bytes; i++)
- 8003d66:	000d      	movs	r5, r1
+ 8003de6:	000d      	movs	r5, r1
     uint8_t ret = 0;
- 8003d68:	2400      	movs	r4, #0
+ 8003de8:	2400      	movs	r4, #0
 {
- 8003d6a:	9201      	str	r2, [sp, #4]
+ 8003dea:	9201      	str	r2, [sp, #4]
     for (i=0; i < bytes; i++)
- 8003d6c:	9a01      	ldr	r2, [sp, #4]
- 8003d6e:	1bab      	subs	r3, r5, r6
- 8003d70:	429a      	cmp	r2, r3
- 8003d72:	dc01      	bgt.n	8003d78 <UART_Transmit+0x18>
+ 8003dec:	9a01      	ldr	r2, [sp, #4]
+ 8003dee:	1bab      	subs	r3, r5, r6
+ 8003df0:	429a      	cmp	r2, r3
+ 8003df2:	dc01      	bgt.n	8003df8 <UART_Transmit+0x18>
             ret++;
         }
     }
 
     return (ret);
 }
- 8003d74:	0020      	movs	r0, r4
- 8003d76:	bdfe      	pop	{r1, r2, r3, r4, r5, r6, r7, pc}
+ 8003df4:	0020      	movs	r0, r4
+ 8003df6:	bdfe      	pop	{r1, r2, r3, r4, r5, r6, r7, pc}
         if ( Uart_Put_Char(channel, *(tx_buf + i)) )
- 8003d78:	7829      	ldrb	r1, [r5, #0]
- 8003d7a:	0038      	movs	r0, r7
- 8003d7c:	f7ff ff48 	bl	8003c10 <Uart_Put_Char>
- 8003d80:	2800      	cmp	r0, #0
- 8003d82:	d001      	beq.n	8003d88 <UART_Transmit+0x28>
+ 8003df8:	7829      	ldrb	r1, [r5, #0]
+ 8003dfa:	0038      	movs	r0, r7
+ 8003dfc:	f7ff ff4a 	bl	8003c94 <Uart_Put_Char>
+ 8003e00:	2800      	cmp	r0, #0
+ 8003e02:	d001      	beq.n	8003e08 <UART_Transmit+0x28>
             ret++;
- 8003d84:	3401      	adds	r4, #1
- 8003d86:	b2e4      	uxtb	r4, r4
- 8003d88:	3501      	adds	r5, #1
- 8003d8a:	e7ef      	b.n	8003d6c <UART_Transmit+0xc>
+ 8003e04:	3401      	adds	r4, #1
+ 8003e06:	b2e4      	uxtb	r4, r4
+ 8003e08:	3501      	adds	r5, #1
+ 8003e0a:	e7ef      	b.n	8003dec <UART_Transmit+0xc>
 
-08003d8c <UART_Rx_Empty>:
+08003e0c <UART_Rx_Empty>:
 *     Returns: Nothing
 * Description: Reconfigures UART channel's pins to be I/O input (disables UART function)
 *******************************************************************************/
 bool UART_Rx_Empty (uint8_t chan)
 {
     return ((0 ==uart_chan[chan].rx_count)&& (uart_chan[chan].rx_in == uart_chan[chan].rx_out));
- 8003d8c:	231c      	movs	r3, #28
- 8003d8e:	4343      	muls	r3, r0
- 8003d90:	2000      	movs	r0, #0
- 8003d92:	4906      	ldr	r1, [pc, #24]	; (8003dac <UART_Rx_Empty+0x20>)
+ 8003e0c:	231c      	movs	r3, #28
+ 8003e0e:	4343      	muls	r3, r0
+ 8003e10:	2000      	movs	r0, #0
+ 8003e12:	4906      	ldr	r1, [pc, #24]	; (8003e2c <UART_Rx_Empty+0x20>)
 {
- 8003d94:	b510      	push	{r4, lr}
+ 8003e14:	b510      	push	{r4, lr}
     return ((0 ==uart_chan[chan].rx_count)&& (uart_chan[chan].rx_in == uart_chan[chan].rx_out));
- 8003d96:	18ca      	adds	r2, r1, r3
- 8003d98:	8894      	ldrh	r4, [r2, #4]
- 8003d9a:	4284      	cmp	r4, r0
- 8003d9c:	d105      	bne.n	8003daa <UART_Rx_Empty+0x1e>
- 8003d9e:	5a58      	ldrh	r0, [r3, r1]
- 8003da0:	8853      	ldrh	r3, [r2, #2]
- 8003da2:	1ac0      	subs	r0, r0, r3
- 8003da4:	4243      	negs	r3, r0
- 8003da6:	4158      	adcs	r0, r3
- 8003da8:	b2c0      	uxtb	r0, r0
+ 8003e16:	18ca      	adds	r2, r1, r3
+ 8003e18:	8894      	ldrh	r4, [r2, #4]
+ 8003e1a:	4284      	cmp	r4, r0
+ 8003e1c:	d105      	bne.n	8003e2a <UART_Rx_Empty+0x1e>
+ 8003e1e:	5a58      	ldrh	r0, [r3, r1]
+ 8003e20:	8853      	ldrh	r3, [r2, #2]
+ 8003e22:	1ac0      	subs	r0, r0, r3
+ 8003e24:	4243      	negs	r3, r0
+ 8003e26:	4158      	adcs	r0, r3
+ 8003e28:	b2c0      	uxtb	r0, r0
 }
- 8003daa:	bd10      	pop	{r4, pc}
- 8003dac:	20000448 	.word	0x20000448
+ 8003e2a:	bd10      	pop	{r4, pc}
+ 8003e2c:	20000448 	.word	0x20000448
 
-08003db0 <UART_Reset_Buf>:
+08003e30 <UART_Reset_Buf>:
 *  Returns: None
 *  Description: Intialize the specified uart device
 *******************************************************************************/
 void UART_Reset_Buf(uint8_t chan)
 {
     if (chan >= UART_NUM_CHANNELS)
- 8003db0:	2801      	cmp	r0, #1
- 8003db2:	d80b      	bhi.n	8003dcc <UART_Reset_Buf+0x1c>
+ 8003e30:	2801      	cmp	r0, #1
+ 8003e32:	d80b      	bhi.n	8003e4c <UART_Reset_Buf+0x1c>
         return;  // Invalid channel!
 
     if (NULL != &uart_chan[chan]) 
     {
         uart_chan[chan].rx_count = 0; // Clear rx byte counter
- 8003db4:	231c      	movs	r3, #28
- 8003db6:	4358      	muls	r0, r3
- 8003db8:	2300      	movs	r3, #0
- 8003dba:	4905      	ldr	r1, [pc, #20]	; (8003dd0 <UART_Reset_Buf+0x20>)
- 8003dbc:	180a      	adds	r2, r1, r0
- 8003dbe:	8093      	strh	r3, [r2, #4]
+ 8003e34:	231c      	movs	r3, #28
+ 8003e36:	4358      	muls	r0, r3
+ 8003e38:	2300      	movs	r3, #0
+ 8003e3a:	4905      	ldr	r1, [pc, #20]	; (8003e50 <UART_Reset_Buf+0x20>)
+ 8003e3c:	180a      	adds	r2, r1, r0
+ 8003e3e:	8093      	strh	r3, [r2, #4]
         uart_chan[chan].rx_in = 0;    // Increment before write index
- 8003dc0:	5243      	strh	r3, [r0, r1]
+ 8003e40:	5243      	strh	r3, [r0, r1]
         uart_chan[chan].rx_out = 0;   // Increment before read index
- 8003dc2:	8053      	strh	r3, [r2, #2]
+ 8003e42:	8053      	strh	r3, [r2, #2]
 
         uart_chan[chan].tx_count = 0; // Clear tx byte counter 
- 8003dc4:	8213      	strh	r3, [r2, #16]
+ 8003e44:	8213      	strh	r3, [r2, #16]
         uart_chan[chan].tx_in = 0;    // Clear tx buffer input before write index
- 8003dc6:	8193      	strh	r3, [r2, #12]
+ 8003e46:	8193      	strh	r3, [r2, #12]
         uart_chan[chan].tx_out = 0;   // Clear tx buffer output before read index
- 8003dc8:	81d3      	strh	r3, [r2, #14]
+ 8003e48:	81d3      	strh	r3, [r2, #14]
         uart_chan[chan].tx_progress = false;   // Clear tx in progress flag
- 8003dca:	7613      	strb	r3, [r2, #24]
+ 8003e4a:	7613      	strb	r3, [r2, #24]
     }
 }
- 8003dcc:	4770      	bx	lr
- 8003dce:	46c0      	nop			; (mov r8, r8)
- 8003dd0:	20000448 	.word	0x20000448
+ 8003e4c:	4770      	bx	lr
+ 8003e4e:	46c0      	nop			; (mov r8, r8)
+ 8003e50:	20000448 	.word	0x20000448
 
-08003dd4 <__udivsi3>:
- 8003dd4:	2200      	movs	r2, #0
- 8003dd6:	0843      	lsrs	r3, r0, #1
- 8003dd8:	428b      	cmp	r3, r1
- 8003dda:	d374      	bcc.n	8003ec6 <__udivsi3+0xf2>
- 8003ddc:	0903      	lsrs	r3, r0, #4
- 8003dde:	428b      	cmp	r3, r1
- 8003de0:	d35f      	bcc.n	8003ea2 <__udivsi3+0xce>
- 8003de2:	0a03      	lsrs	r3, r0, #8
- 8003de4:	428b      	cmp	r3, r1
- 8003de6:	d344      	bcc.n	8003e72 <__udivsi3+0x9e>
- 8003de8:	0b03      	lsrs	r3, r0, #12
- 8003dea:	428b      	cmp	r3, r1
- 8003dec:	d328      	bcc.n	8003e40 <__udivsi3+0x6c>
- 8003dee:	0c03      	lsrs	r3, r0, #16
- 8003df0:	428b      	cmp	r3, r1
- 8003df2:	d30d      	bcc.n	8003e10 <__udivsi3+0x3c>
- 8003df4:	22ff      	movs	r2, #255	; 0xff
- 8003df6:	0209      	lsls	r1, r1, #8
- 8003df8:	ba12      	rev	r2, r2
- 8003dfa:	0c03      	lsrs	r3, r0, #16
- 8003dfc:	428b      	cmp	r3, r1
- 8003dfe:	d302      	bcc.n	8003e06 <__udivsi3+0x32>
- 8003e00:	1212      	asrs	r2, r2, #8
- 8003e02:	0209      	lsls	r1, r1, #8
- 8003e04:	d065      	beq.n	8003ed2 <__udivsi3+0xfe>
- 8003e06:	0b03      	lsrs	r3, r0, #12
- 8003e08:	428b      	cmp	r3, r1
- 8003e0a:	d319      	bcc.n	8003e40 <__udivsi3+0x6c>
- 8003e0c:	e000      	b.n	8003e10 <__udivsi3+0x3c>
- 8003e0e:	0a09      	lsrs	r1, r1, #8
- 8003e10:	0bc3      	lsrs	r3, r0, #15
- 8003e12:	428b      	cmp	r3, r1
- 8003e14:	d301      	bcc.n	8003e1a <__udivsi3+0x46>
- 8003e16:	03cb      	lsls	r3, r1, #15
- 8003e18:	1ac0      	subs	r0, r0, r3
- 8003e1a:	4152      	adcs	r2, r2
- 8003e1c:	0b83      	lsrs	r3, r0, #14
- 8003e1e:	428b      	cmp	r3, r1
- 8003e20:	d301      	bcc.n	8003e26 <__udivsi3+0x52>
- 8003e22:	038b      	lsls	r3, r1, #14
- 8003e24:	1ac0      	subs	r0, r0, r3
- 8003e26:	4152      	adcs	r2, r2
- 8003e28:	0b43      	lsrs	r3, r0, #13
- 8003e2a:	428b      	cmp	r3, r1
- 8003e2c:	d301      	bcc.n	8003e32 <__udivsi3+0x5e>
- 8003e2e:	034b      	lsls	r3, r1, #13
- 8003e30:	1ac0      	subs	r0, r0, r3
- 8003e32:	4152      	adcs	r2, r2
- 8003e34:	0b03      	lsrs	r3, r0, #12
- 8003e36:	428b      	cmp	r3, r1
- 8003e38:	d301      	bcc.n	8003e3e <__udivsi3+0x6a>
- 8003e3a:	030b      	lsls	r3, r1, #12
- 8003e3c:	1ac0      	subs	r0, r0, r3
- 8003e3e:	4152      	adcs	r2, r2
- 8003e40:	0ac3      	lsrs	r3, r0, #11
- 8003e42:	428b      	cmp	r3, r1
- 8003e44:	d301      	bcc.n	8003e4a <__udivsi3+0x76>
- 8003e46:	02cb      	lsls	r3, r1, #11
- 8003e48:	1ac0      	subs	r0, r0, r3
- 8003e4a:	4152      	adcs	r2, r2
- 8003e4c:	0a83      	lsrs	r3, r0, #10
- 8003e4e:	428b      	cmp	r3, r1
- 8003e50:	d301      	bcc.n	8003e56 <__udivsi3+0x82>
- 8003e52:	028b      	lsls	r3, r1, #10
- 8003e54:	1ac0      	subs	r0, r0, r3
- 8003e56:	4152      	adcs	r2, r2
- 8003e58:	0a43      	lsrs	r3, r0, #9
- 8003e5a:	428b      	cmp	r3, r1
- 8003e5c:	d301      	bcc.n	8003e62 <__udivsi3+0x8e>
- 8003e5e:	024b      	lsls	r3, r1, #9
- 8003e60:	1ac0      	subs	r0, r0, r3
- 8003e62:	4152      	adcs	r2, r2
- 8003e64:	0a03      	lsrs	r3, r0, #8
- 8003e66:	428b      	cmp	r3, r1
- 8003e68:	d301      	bcc.n	8003e6e <__udivsi3+0x9a>
- 8003e6a:	020b      	lsls	r3, r1, #8
- 8003e6c:	1ac0      	subs	r0, r0, r3
- 8003e6e:	4152      	adcs	r2, r2
- 8003e70:	d2cd      	bcs.n	8003e0e <__udivsi3+0x3a>
- 8003e72:	09c3      	lsrs	r3, r0, #7
- 8003e74:	428b      	cmp	r3, r1
- 8003e76:	d301      	bcc.n	8003e7c <__udivsi3+0xa8>
- 8003e78:	01cb      	lsls	r3, r1, #7
- 8003e7a:	1ac0      	subs	r0, r0, r3
- 8003e7c:	4152      	adcs	r2, r2
- 8003e7e:	0983      	lsrs	r3, r0, #6
- 8003e80:	428b      	cmp	r3, r1
- 8003e82:	d301      	bcc.n	8003e88 <__udivsi3+0xb4>
- 8003e84:	018b      	lsls	r3, r1, #6
- 8003e86:	1ac0      	subs	r0, r0, r3
- 8003e88:	4152      	adcs	r2, r2
- 8003e8a:	0943      	lsrs	r3, r0, #5
- 8003e8c:	428b      	cmp	r3, r1
- 8003e8e:	d301      	bcc.n	8003e94 <__udivsi3+0xc0>
- 8003e90:	014b      	lsls	r3, r1, #5
- 8003e92:	1ac0      	subs	r0, r0, r3
- 8003e94:	4152      	adcs	r2, r2
- 8003e96:	0903      	lsrs	r3, r0, #4
+08003e54 <USART2_IRQHandler>:
+
+void USART2_IRQHandler(void)
+{
+ 8003e54:	b510      	push	{r4, lr}
+	unsigned char res;
+
+ 	if(USART_GetITStatus(USART2, USART_IT_RXNE) != RESET)
+ 8003e56:	490c      	ldr	r1, [pc, #48]	; (8003e88 <USART2_IRQHandler+0x34>)
+ 8003e58:	480c      	ldr	r0, [pc, #48]	; (8003e8c <USART2_IRQHandler+0x38>)
+ 8003e5a:	f7ff fd6f 	bl	800393c <USART_GetITStatus>
+ 8003e5e:	2800      	cmp	r0, #0
+ 8003e60:	d003      	beq.n	8003e6a <USART2_IRQHandler+0x16>
+ 	{
+ 		UART_RX_ISR(1);
+ 8003e62:	2001      	movs	r0, #1
+ 8003e64:	f7ff ff76 	bl	8003d54 <UART_RX_ISR>
+ 	else if(USART_GetITStatus(USART2, USART_IT_TC) != RESET)
+ 	{
+ 		USART_ClearITPendingBit(USART2, USART_IT_TC);
+ 		UART_TX_ISR(1);
+ 	}
+}
+ 8003e68:	bd10      	pop	{r4, pc}
+ 	else if(USART_GetITStatus(USART2, USART_IT_TC) != RESET)
+ 8003e6a:	4909      	ldr	r1, [pc, #36]	; (8003e90 <USART2_IRQHandler+0x3c>)
+ 8003e6c:	4807      	ldr	r0, [pc, #28]	; (8003e8c <USART2_IRQHandler+0x38>)
+ 8003e6e:	f7ff fd65 	bl	800393c <USART_GetITStatus>
+ 8003e72:	2800      	cmp	r0, #0
+ 8003e74:	d0f8      	beq.n	8003e68 <USART2_IRQHandler+0x14>
+ 		USART_ClearITPendingBit(USART2, USART_IT_TC);
+ 8003e76:	4906      	ldr	r1, [pc, #24]	; (8003e90 <USART2_IRQHandler+0x3c>)
+ 8003e78:	4804      	ldr	r0, [pc, #16]	; (8003e8c <USART2_IRQHandler+0x38>)
+ 8003e7a:	f7ff fd7b 	bl	8003974 <USART_ClearITPendingBit>
+ 		UART_TX_ISR(1);
+ 8003e7e:	2001      	movs	r0, #1
+ 8003e80:	f7ff ff46 	bl	8003d10 <UART_TX_ISR>
+}
+ 8003e84:	e7f0      	b.n	8003e68 <USART2_IRQHandler+0x14>
+ 8003e86:	46c0      	nop			; (mov r8, r8)
+ 8003e88:	00050105 	.word	0x00050105
+ 8003e8c:	40004400 	.word	0x40004400
+ 8003e90:	00060106 	.word	0x00060106
+
+08003e94 <__udivsi3>:
+ 8003e94:	2200      	movs	r2, #0
+ 8003e96:	0843      	lsrs	r3, r0, #1
  8003e98:	428b      	cmp	r3, r1
- 8003e9a:	d301      	bcc.n	8003ea0 <__udivsi3+0xcc>
- 8003e9c:	010b      	lsls	r3, r1, #4
- 8003e9e:	1ac0      	subs	r0, r0, r3
- 8003ea0:	4152      	adcs	r2, r2
- 8003ea2:	08c3      	lsrs	r3, r0, #3
+ 8003e9a:	d374      	bcc.n	8003f86 <__udivsi3+0xf2>
+ 8003e9c:	0903      	lsrs	r3, r0, #4
+ 8003e9e:	428b      	cmp	r3, r1
+ 8003ea0:	d35f      	bcc.n	8003f62 <__udivsi3+0xce>
+ 8003ea2:	0a03      	lsrs	r3, r0, #8
  8003ea4:	428b      	cmp	r3, r1
- 8003ea6:	d301      	bcc.n	8003eac <__udivsi3+0xd8>
- 8003ea8:	00cb      	lsls	r3, r1, #3
- 8003eaa:	1ac0      	subs	r0, r0, r3
- 8003eac:	4152      	adcs	r2, r2
- 8003eae:	0883      	lsrs	r3, r0, #2
+ 8003ea6:	d344      	bcc.n	8003f32 <__udivsi3+0x9e>
+ 8003ea8:	0b03      	lsrs	r3, r0, #12
+ 8003eaa:	428b      	cmp	r3, r1
+ 8003eac:	d328      	bcc.n	8003f00 <__udivsi3+0x6c>
+ 8003eae:	0c03      	lsrs	r3, r0, #16
  8003eb0:	428b      	cmp	r3, r1
- 8003eb2:	d301      	bcc.n	8003eb8 <__udivsi3+0xe4>
- 8003eb4:	008b      	lsls	r3, r1, #2
- 8003eb6:	1ac0      	subs	r0, r0, r3
- 8003eb8:	4152      	adcs	r2, r2
- 8003eba:	0843      	lsrs	r3, r0, #1
+ 8003eb2:	d30d      	bcc.n	8003ed0 <__udivsi3+0x3c>
+ 8003eb4:	22ff      	movs	r2, #255	; 0xff
+ 8003eb6:	0209      	lsls	r1, r1, #8
+ 8003eb8:	ba12      	rev	r2, r2
+ 8003eba:	0c03      	lsrs	r3, r0, #16
  8003ebc:	428b      	cmp	r3, r1
- 8003ebe:	d301      	bcc.n	8003ec4 <__udivsi3+0xf0>
- 8003ec0:	004b      	lsls	r3, r1, #1
- 8003ec2:	1ac0      	subs	r0, r0, r3
- 8003ec4:	4152      	adcs	r2, r2
- 8003ec6:	1a41      	subs	r1, r0, r1
- 8003ec8:	d200      	bcs.n	8003ecc <__udivsi3+0xf8>
- 8003eca:	4601      	mov	r1, r0
- 8003ecc:	4152      	adcs	r2, r2
- 8003ece:	4610      	mov	r0, r2
- 8003ed0:	4770      	bx	lr
- 8003ed2:	e7ff      	b.n	8003ed4 <__udivsi3+0x100>
- 8003ed4:	b501      	push	{r0, lr}
- 8003ed6:	2000      	movs	r0, #0
- 8003ed8:	f000 f806 	bl	8003ee8 <__aeabi_idiv0>
- 8003edc:	bd02      	pop	{r1, pc}
- 8003ede:	46c0      	nop			; (mov r8, r8)
+ 8003ebe:	d302      	bcc.n	8003ec6 <__udivsi3+0x32>
+ 8003ec0:	1212      	asrs	r2, r2, #8
+ 8003ec2:	0209      	lsls	r1, r1, #8
+ 8003ec4:	d065      	beq.n	8003f92 <__udivsi3+0xfe>
+ 8003ec6:	0b03      	lsrs	r3, r0, #12
+ 8003ec8:	428b      	cmp	r3, r1
+ 8003eca:	d319      	bcc.n	8003f00 <__udivsi3+0x6c>
+ 8003ecc:	e000      	b.n	8003ed0 <__udivsi3+0x3c>
+ 8003ece:	0a09      	lsrs	r1, r1, #8
+ 8003ed0:	0bc3      	lsrs	r3, r0, #15
+ 8003ed2:	428b      	cmp	r3, r1
+ 8003ed4:	d301      	bcc.n	8003eda <__udivsi3+0x46>
+ 8003ed6:	03cb      	lsls	r3, r1, #15
+ 8003ed8:	1ac0      	subs	r0, r0, r3
+ 8003eda:	4152      	adcs	r2, r2
+ 8003edc:	0b83      	lsrs	r3, r0, #14
+ 8003ede:	428b      	cmp	r3, r1
+ 8003ee0:	d301      	bcc.n	8003ee6 <__udivsi3+0x52>
+ 8003ee2:	038b      	lsls	r3, r1, #14
+ 8003ee4:	1ac0      	subs	r0, r0, r3
+ 8003ee6:	4152      	adcs	r2, r2
+ 8003ee8:	0b43      	lsrs	r3, r0, #13
+ 8003eea:	428b      	cmp	r3, r1
+ 8003eec:	d301      	bcc.n	8003ef2 <__udivsi3+0x5e>
+ 8003eee:	034b      	lsls	r3, r1, #13
+ 8003ef0:	1ac0      	subs	r0, r0, r3
+ 8003ef2:	4152      	adcs	r2, r2
+ 8003ef4:	0b03      	lsrs	r3, r0, #12
+ 8003ef6:	428b      	cmp	r3, r1
+ 8003ef8:	d301      	bcc.n	8003efe <__udivsi3+0x6a>
+ 8003efa:	030b      	lsls	r3, r1, #12
+ 8003efc:	1ac0      	subs	r0, r0, r3
+ 8003efe:	4152      	adcs	r2, r2
+ 8003f00:	0ac3      	lsrs	r3, r0, #11
+ 8003f02:	428b      	cmp	r3, r1
+ 8003f04:	d301      	bcc.n	8003f0a <__udivsi3+0x76>
+ 8003f06:	02cb      	lsls	r3, r1, #11
+ 8003f08:	1ac0      	subs	r0, r0, r3
+ 8003f0a:	4152      	adcs	r2, r2
+ 8003f0c:	0a83      	lsrs	r3, r0, #10
+ 8003f0e:	428b      	cmp	r3, r1
+ 8003f10:	d301      	bcc.n	8003f16 <__udivsi3+0x82>
+ 8003f12:	028b      	lsls	r3, r1, #10
+ 8003f14:	1ac0      	subs	r0, r0, r3
+ 8003f16:	4152      	adcs	r2, r2
+ 8003f18:	0a43      	lsrs	r3, r0, #9
+ 8003f1a:	428b      	cmp	r3, r1
+ 8003f1c:	d301      	bcc.n	8003f22 <__udivsi3+0x8e>
+ 8003f1e:	024b      	lsls	r3, r1, #9
+ 8003f20:	1ac0      	subs	r0, r0, r3
+ 8003f22:	4152      	adcs	r2, r2
+ 8003f24:	0a03      	lsrs	r3, r0, #8
+ 8003f26:	428b      	cmp	r3, r1
+ 8003f28:	d301      	bcc.n	8003f2e <__udivsi3+0x9a>
+ 8003f2a:	020b      	lsls	r3, r1, #8
+ 8003f2c:	1ac0      	subs	r0, r0, r3
+ 8003f2e:	4152      	adcs	r2, r2
+ 8003f30:	d2cd      	bcs.n	8003ece <__udivsi3+0x3a>
+ 8003f32:	09c3      	lsrs	r3, r0, #7
+ 8003f34:	428b      	cmp	r3, r1
+ 8003f36:	d301      	bcc.n	8003f3c <__udivsi3+0xa8>
+ 8003f38:	01cb      	lsls	r3, r1, #7
+ 8003f3a:	1ac0      	subs	r0, r0, r3
+ 8003f3c:	4152      	adcs	r2, r2
+ 8003f3e:	0983      	lsrs	r3, r0, #6
+ 8003f40:	428b      	cmp	r3, r1
+ 8003f42:	d301      	bcc.n	8003f48 <__udivsi3+0xb4>
+ 8003f44:	018b      	lsls	r3, r1, #6
+ 8003f46:	1ac0      	subs	r0, r0, r3
+ 8003f48:	4152      	adcs	r2, r2
+ 8003f4a:	0943      	lsrs	r3, r0, #5
+ 8003f4c:	428b      	cmp	r3, r1
+ 8003f4e:	d301      	bcc.n	8003f54 <__udivsi3+0xc0>
+ 8003f50:	014b      	lsls	r3, r1, #5
+ 8003f52:	1ac0      	subs	r0, r0, r3
+ 8003f54:	4152      	adcs	r2, r2
+ 8003f56:	0903      	lsrs	r3, r0, #4
+ 8003f58:	428b      	cmp	r3, r1
+ 8003f5a:	d301      	bcc.n	8003f60 <__udivsi3+0xcc>
+ 8003f5c:	010b      	lsls	r3, r1, #4
+ 8003f5e:	1ac0      	subs	r0, r0, r3
+ 8003f60:	4152      	adcs	r2, r2
+ 8003f62:	08c3      	lsrs	r3, r0, #3
+ 8003f64:	428b      	cmp	r3, r1
+ 8003f66:	d301      	bcc.n	8003f6c <__udivsi3+0xd8>
+ 8003f68:	00cb      	lsls	r3, r1, #3
+ 8003f6a:	1ac0      	subs	r0, r0, r3
+ 8003f6c:	4152      	adcs	r2, r2
+ 8003f6e:	0883      	lsrs	r3, r0, #2
+ 8003f70:	428b      	cmp	r3, r1
+ 8003f72:	d301      	bcc.n	8003f78 <__udivsi3+0xe4>
+ 8003f74:	008b      	lsls	r3, r1, #2
+ 8003f76:	1ac0      	subs	r0, r0, r3
+ 8003f78:	4152      	adcs	r2, r2
+ 8003f7a:	0843      	lsrs	r3, r0, #1
+ 8003f7c:	428b      	cmp	r3, r1
+ 8003f7e:	d301      	bcc.n	8003f84 <__udivsi3+0xf0>
+ 8003f80:	004b      	lsls	r3, r1, #1
+ 8003f82:	1ac0      	subs	r0, r0, r3
+ 8003f84:	4152      	adcs	r2, r2
+ 8003f86:	1a41      	subs	r1, r0, r1
+ 8003f88:	d200      	bcs.n	8003f8c <__udivsi3+0xf8>
+ 8003f8a:	4601      	mov	r1, r0
+ 8003f8c:	4152      	adcs	r2, r2
+ 8003f8e:	4610      	mov	r0, r2
+ 8003f90:	4770      	bx	lr
+ 8003f92:	e7ff      	b.n	8003f94 <__udivsi3+0x100>
+ 8003f94:	b501      	push	{r0, lr}
+ 8003f96:	2000      	movs	r0, #0
+ 8003f98:	f000 f806 	bl	8003fa8 <__aeabi_idiv0>
+ 8003f9c:	bd02      	pop	{r1, pc}
+ 8003f9e:	46c0      	nop			; (mov r8, r8)
 
-08003ee0 <__aeabi_uidivmod>:
- 8003ee0:	2900      	cmp	r1, #0
- 8003ee2:	d0f7      	beq.n	8003ed4 <__udivsi3+0x100>
- 8003ee4:	e776      	b.n	8003dd4 <__udivsi3>
- 8003ee6:	4770      	bx	lr
+08003fa0 <__aeabi_uidivmod>:
+ 8003fa0:	2900      	cmp	r1, #0
+ 8003fa2:	d0f7      	beq.n	8003f94 <__udivsi3+0x100>
+ 8003fa4:	e776      	b.n	8003e94 <__udivsi3>
+ 8003fa6:	4770      	bx	lr
 
-08003ee8 <__aeabi_idiv0>:
- 8003ee8:	4770      	bx	lr
- 8003eea:	46c0      	nop			; (mov r8, r8)
+08003fa8 <__aeabi_idiv0>:
+ 8003fa8:	4770      	bx	lr
+ 8003faa:	46c0      	nop			; (mov r8, r8)
 
-08003eec <Reset_Handler>:
+08003fac <Reset_Handler>:
 
   .section .text.Reset_Handler
   .weak Reset_Handler
   .type Reset_Handler, %function
 Reset_Handler:
   ldr   r0, =_estack
- 8003eec:	480d      	ldr	r0, [pc, #52]	; (8003f24 <LoopForever+0x2>)
+ 8003fac:	480d      	ldr	r0, [pc, #52]	; (8003fe4 <LoopForever+0x2>)
   mov   sp, r0          /* set stack pointer */
- 8003eee:	4685      	mov	sp, r0
+ 8003fae:	4685      	mov	sp, r0
 
 /* Copy the data segment initializers from flash to SRAM */
   movs r1, #0
- 8003ef0:	2100      	movs	r1, #0
+ 8003fb0:	2100      	movs	r1, #0
   b LoopCopyDataInit
- 8003ef2:	e003      	b.n	8003efc <LoopCopyDataInit>
+ 8003fb2:	e003      	b.n	8003fbc <LoopCopyDataInit>
 
-08003ef4 <CopyDataInit>:
+08003fb4 <CopyDataInit>:
 
 CopyDataInit:
   ldr r3, =_sidata
- 8003ef4:	4b0c      	ldr	r3, [pc, #48]	; (8003f28 <LoopForever+0x6>)
+ 8003fb4:	4b0c      	ldr	r3, [pc, #48]	; (8003fe8 <LoopForever+0x6>)
   ldr r3, [r3, r1]
- 8003ef6:	585b      	ldr	r3, [r3, r1]
+ 8003fb6:	585b      	ldr	r3, [r3, r1]
   str r3, [r0, r1]
- 8003ef8:	5043      	str	r3, [r0, r1]
+ 8003fb8:	5043      	str	r3, [r0, r1]
   adds r1, r1, #4
- 8003efa:	3104      	adds	r1, #4
+ 8003fba:	3104      	adds	r1, #4
 
-08003efc <LoopCopyDataInit>:
+08003fbc <LoopCopyDataInit>:
 
 LoopCopyDataInit:
   ldr r0, =_sdata
- 8003efc:	480b      	ldr	r0, [pc, #44]	; (8003f2c <LoopForever+0xa>)
+ 8003fbc:	480b      	ldr	r0, [pc, #44]	; (8003fec <LoopForever+0xa>)
   ldr r3, =_edata
- 8003efe:	4b0c      	ldr	r3, [pc, #48]	; (8003f30 <LoopForever+0xe>)
+ 8003fbe:	4b0c      	ldr	r3, [pc, #48]	; (8003ff0 <LoopForever+0xe>)
   adds r2, r0, r1
- 8003f00:	1842      	adds	r2, r0, r1
+ 8003fc0:	1842      	adds	r2, r0, r1
   cmp r2, r3
- 8003f02:	429a      	cmp	r2, r3
+ 8003fc2:	429a      	cmp	r2, r3
   bcc CopyDataInit
- 8003f04:	d3f6      	bcc.n	8003ef4 <CopyDataInit>
+ 8003fc4:	d3f6      	bcc.n	8003fb4 <CopyDataInit>
   ldr r2, =_sbss
- 8003f06:	4a0b      	ldr	r2, [pc, #44]	; (8003f34 <LoopForever+0x12>)
+ 8003fc6:	4a0b      	ldr	r2, [pc, #44]	; (8003ff4 <LoopForever+0x12>)
   b LoopFillZerobss
- 8003f08:	e002      	b.n	8003f10 <LoopFillZerobss>
+ 8003fc8:	e002      	b.n	8003fd0 <LoopFillZerobss>
 
-08003f0a <FillZerobss>:
+08003fca <FillZerobss>:
 /* Zero fill the bss segment. */
 FillZerobss:
   movs r3, #0
- 8003f0a:	2300      	movs	r3, #0
+ 8003fca:	2300      	movs	r3, #0
   str  r3, [r2]
- 8003f0c:	6013      	str	r3, [r2, #0]
+ 8003fcc:	6013      	str	r3, [r2, #0]
   adds r2, r2, #4
- 8003f0e:	3204      	adds	r2, #4
+ 8003fce:	3204      	adds	r2, #4
 
-08003f10 <LoopFillZerobss>:
+08003fd0 <LoopFillZerobss>:
 
 
 LoopFillZerobss:
   ldr r3, = _ebss
- 8003f10:	4b09      	ldr	r3, [pc, #36]	; (8003f38 <LoopForever+0x16>)
+ 8003fd0:	4b09      	ldr	r3, [pc, #36]	; (8003ff8 <LoopForever+0x16>)
   cmp r2, r3
- 8003f12:	429a      	cmp	r2, r3
+ 8003fd2:	429a      	cmp	r2, r3
   bcc FillZerobss
- 8003f14:	d3f9      	bcc.n	8003f0a <FillZerobss>
+ 8003fd4:	d3f9      	bcc.n	8003fca <FillZerobss>
 
 /* Call the clock system intitialization function.*/
     bl  SystemInit
- 8003f16:	f7fc f903 	bl	8000120 <SystemInit>
+ 8003fd6:	f7fc f8a3 	bl	8000120 <SystemInit>
 /* Call static constructors */
     bl __libc_init_array
- 8003f1a:	f000 f811 	bl	8003f40 <__libc_init_array>
+ 8003fda:	f000 f817 	bl	800400c <__libc_init_array>
 /* Call the application's entry point.*/
   bl main
- 8003f1e:	f000 f80e 	bl	8003f3e <main>
+ 8003fde:	f000 f80e 	bl	8003ffe <main>
 
-08003f22 <LoopForever>:
+08003fe2 <LoopForever>:
   
 LoopForever:
     b LoopForever
- 8003f22:	e7fe      	b.n	8003f22 <LoopForever>
+ 8003fe2:	e7fe      	b.n	8003fe2 <LoopForever>
   ldr   r0, =_estack
- 8003f24:	20002000 	.word	0x20002000
+ 8003fe4:	20002000 	.word	0x20002000
   ldr r3, =_sidata
- 8003f28:	08003fac 	.word	0x08003fac
+ 8003fe8:	08004080 	.word	0x08004080
   ldr r0, =_sdata
- 8003f2c:	20000000 	.word	0x20000000
+ 8003fec:	20000000 	.word	0x20000000
   ldr r3, =_edata
- 8003f30:	20000028 	.word	0x20000028
+ 8003ff0:	20000028 	.word	0x20000028
   ldr r2, =_sbss
- 8003f34:	20000028 	.word	0x20000028
+ 8003ff4:	20000028 	.word	0x20000028
   ldr r3, = _ebss
- 8003f38:	20000480 	.word	0x20000480
+ 8003ff8:	20000480 	.word	0x20000480
 
-08003f3c <ADC1_COMP_IRQHandler>:
+08003ffc <ADC1_COMP_IRQHandler>:
  * @retval : None
 */
     .section .text.Default_Handler,"ax",%progbits
 Default_Handler:
 Infinite_Loop:
   b Infinite_Loop
- 8003f3c:	e7fe      	b.n	8003f3c <ADC1_COMP_IRQHandler>
+ 8003ffc:	e7fe      	b.n	8003ffc <ADC1_COMP_IRQHandler>
 
-08003f3e <main>:
+08003ffe <main>:
 **  Abstract: main program
 **
 **===========================================================================
 */
 int main(void)
 {
- 8003f3e:	e7fe      	b.n	8003f3e <main>
+ 8003ffe:	b510      	push	{r4, lr}
+	rs485_init();
+ 8004000:	f7ff fd10 	bl	8003a24 <rs485_init>
+  /* TODO - Add your application code here */
 
-08003f40 <__libc_init_array>:
- 8003f40:	b570      	push	{r4, r5, r6, lr}
- 8003f42:	2600      	movs	r6, #0
- 8003f44:	4d0c      	ldr	r5, [pc, #48]	; (8003f78 <__libc_init_array+0x38>)
- 8003f46:	4c0d      	ldr	r4, [pc, #52]	; (8003f7c <__libc_init_array+0x3c>)
- 8003f48:	1b64      	subs	r4, r4, r5
- 8003f4a:	10a4      	asrs	r4, r4, #2
- 8003f4c:	42a6      	cmp	r6, r4
- 8003f4e:	d109      	bne.n	8003f64 <__libc_init_array+0x24>
- 8003f50:	2600      	movs	r6, #0
- 8003f52:	f000 f81b 	bl	8003f8c <_init>
- 8003f56:	4d0a      	ldr	r5, [pc, #40]	; (8003f80 <__libc_init_array+0x40>)
- 8003f58:	4c0a      	ldr	r4, [pc, #40]	; (8003f84 <__libc_init_array+0x44>)
- 8003f5a:	1b64      	subs	r4, r4, r5
- 8003f5c:	10a4      	asrs	r4, r4, #2
- 8003f5e:	42a6      	cmp	r6, r4
- 8003f60:	d105      	bne.n	8003f6e <__libc_init_array+0x2e>
- 8003f62:	bd70      	pop	{r4, r5, r6, pc}
- 8003f64:	00b3      	lsls	r3, r6, #2
- 8003f66:	58eb      	ldr	r3, [r5, r3]
- 8003f68:	4798      	blx	r3
- 8003f6a:	3601      	adds	r6, #1
- 8003f6c:	e7ee      	b.n	8003f4c <__libc_init_array+0xc>
- 8003f6e:	00b3      	lsls	r3, r6, #2
- 8003f70:	58eb      	ldr	r3, [r5, r3]
- 8003f72:	4798      	blx	r3
- 8003f74:	3601      	adds	r6, #1
- 8003f76:	e7f2      	b.n	8003f5e <__libc_init_array+0x1e>
- 8003f78:	08003fa4 	.word	0x08003fa4
- 8003f7c:	08003fa4 	.word	0x08003fa4
- 8003f80:	08003fa4 	.word	0x08003fa4
- 8003f84:	08003fa8 	.word	0x08003fa8
+  /* Infinite loop */
+  while (1)
+  {
+	  rs485_task();
+ 8004004:	f7ff fd37 	bl	8003a76 <rs485_task>
+ 8004008:	e7fc      	b.n	8004004 <main+0x6>
+	...
 
-08003f88 <__EH_FRAME_BEGIN__>:
- 8003f88:	00000000                                ....
+0800400c <__libc_init_array>:
+ 800400c:	b570      	push	{r4, r5, r6, lr}
+ 800400e:	2600      	movs	r6, #0
+ 8004010:	4d0c      	ldr	r5, [pc, #48]	; (8004044 <__libc_init_array+0x38>)
+ 8004012:	4c0d      	ldr	r4, [pc, #52]	; (8004048 <__libc_init_array+0x3c>)
+ 8004014:	1b64      	subs	r4, r4, r5
+ 8004016:	10a4      	asrs	r4, r4, #2
+ 8004018:	42a6      	cmp	r6, r4
+ 800401a:	d109      	bne.n	8004030 <__libc_init_array+0x24>
+ 800401c:	2600      	movs	r6, #0
+ 800401e:	f000 f81b 	bl	8004058 <_init>
+ 8004022:	4d0a      	ldr	r5, [pc, #40]	; (800404c <__libc_init_array+0x40>)
+ 8004024:	4c0a      	ldr	r4, [pc, #40]	; (8004050 <__libc_init_array+0x44>)
+ 8004026:	1b64      	subs	r4, r4, r5
+ 8004028:	10a4      	asrs	r4, r4, #2
+ 800402a:	42a6      	cmp	r6, r4
+ 800402c:	d105      	bne.n	800403a <__libc_init_array+0x2e>
+ 800402e:	bd70      	pop	{r4, r5, r6, pc}
+ 8004030:	00b3      	lsls	r3, r6, #2
+ 8004032:	58eb      	ldr	r3, [r5, r3]
+ 8004034:	4798      	blx	r3
+ 8004036:	3601      	adds	r6, #1
+ 8004038:	e7ee      	b.n	8004018 <__libc_init_array+0xc>
+ 800403a:	00b3      	lsls	r3, r6, #2
+ 800403c:	58eb      	ldr	r3, [r5, r3]
+ 800403e:	4798      	blx	r3
+ 8004040:	3601      	adds	r6, #1
+ 8004042:	e7f2      	b.n	800402a <__libc_init_array+0x1e>
+ 8004044:	08004078 	.word	0x08004078
+ 8004048:	08004078 	.word	0x08004078
+ 800404c:	08004078 	.word	0x08004078
+ 8004050:	0800407c 	.word	0x0800407c
 
-08003f8c <_init>:
- 8003f8c:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
- 8003f8e:	46c0      	nop			; (mov r8, r8)
- 8003f90:	bcf8      	pop	{r3, r4, r5, r6, r7}
- 8003f92:	bc08      	pop	{r3}
- 8003f94:	469e      	mov	lr, r3
- 8003f96:	4770      	bx	lr
+08004054 <__EH_FRAME_BEGIN__>:
+ 8004054:	00000000                                ....
 
-08003f98 <_fini>:
- 8003f98:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
- 8003f9a:	46c0      	nop			; (mov r8, r8)
- 8003f9c:	bcf8      	pop	{r3, r4, r5, r6, r7}
- 8003f9e:	bc08      	pop	{r3}
- 8003fa0:	469e      	mov	lr, r3
- 8003fa2:	4770      	bx	lr
+08004058 <_init>:
+ 8004058:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 800405a:	46c0      	nop			; (mov r8, r8)
+ 800405c:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 800405e:	bc08      	pop	{r3}
+ 8004060:	469e      	mov	lr, r3
+ 8004062:	4770      	bx	lr
+
+08004064 <_fini>:
+ 8004064:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 8004066:	46c0      	nop			; (mov r8, r8)
+ 8004068:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 800406a:	bc08      	pop	{r3}
+ 800406c:	469e      	mov	lr, r3
+ 800406e:	4770      	bx	lr

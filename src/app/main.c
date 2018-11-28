@@ -29,7 +29,7 @@ SOFTWARE.
 
 /* Includes */
 #include "stm32f0xx.h"
-
+#include "rs485.h"
 /* Private macro */
 /* Private variables */
 /* Private function prototypes */
@@ -44,13 +44,13 @@ SOFTWARE.
 */
 int main(void)
 {
-  uint32_t i = 0;
+	rs485_init();
 
   /* TODO - Add your application code here */
 
   /* Infinite loop */
   while (1)
   {
-	i++;
+	  rs485_task();
   }
 }

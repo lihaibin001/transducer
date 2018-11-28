@@ -72,14 +72,19 @@ void Uart_InitIO(uint8_t chan)
 {
     USART_InitTypeDef USART_InitStructure;
     GPIO_InitTypeDef GPIO_InitStructure;
-
+	NVIC_InitTypeDef NVIC_InitStruct;
+	RCC_APB1PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
     switch(chan)
     {
         case 0:
+
+		GPIO_PinAFConfig(GPIOA, GPIO_PinSource9, GPIO_AF_1);
+		GPIO_PinAFConfig(GPIOA, GPIO_PinSource10, GPIO_AF_1);
 		GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
 		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
-		GPIO_Init( GPIOA, &GPIO_InitStructure );
-		
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+
+
 		GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
 		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
 		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
@@ -98,11 +103,13 @@ void Uart_InitIO(uint8_t chan)
 		USART_Cmd(USART1, ENABLE);
             break;
         case 1:
-		GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;
+		RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
+		RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2,ENABLE);
+		GPIO_PinAFConfig(GPIOA, GPIO_PinSource2, GPIO_AF_1);
+		GPIO_PinAFConfig(GPIOA, GPIO_PinSource3, GPIO_AF_1);
+		GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3 | GPIO_Pin_2;
 		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
-		GPIO_Init( GPIOA, &GPIO_InitStructure );
-		
-		GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
 		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
 		GPIO_Init( GPIOA, &GPIO_InitStructure );
@@ -118,6 +125,11 @@ void Uart_InitIO(uint8_t chan)
 		USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
 		USART_ITConfig(USART2, USART_IT_TC, DISABLE);
 		USART_Cmd(USART2, ENABLE);
+
+		NVIC_InitStruct.NVIC_IRQChannel = USART2_IRQn;
+		NVIC_InitStruct.NVIC_IRQChannelPriority = 0x03;
+		NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
+		NVIC_Init(&NVIC_InitStruct);
             break;
         default:
             break;
@@ -230,7 +242,7 @@ bool Uart_Put_Char (uint8_t chan, uint8_t data)
    	return false; // Invalid channel!
 
    /** Enter Critical Section can not restart during this time ***/
-   __disable_irq();
+//   __disable_irq();
 
    // Tx buffer not full
    if (uart_chan[chan].tx_count < (uart_chan[chan].tx_size))
@@ -260,7 +272,7 @@ bool Uart_Put_Char (uint8_t chan, uint8_t data)
       }
    }
 
-   __enable_irq();
+//   __enable_irq();
    return (ret);
 }
 
@@ -447,8 +459,6 @@ void uart_initialize_hook(uint8_t channel)
             break;
         case 2:
             break;
-        case 3:
-            break;
         default:
 	    return;
             break;
@@ -517,6 +527,21 @@ void UART_Reset_Buf(uint8_t chan)
         uart_chan[chan].tx_out = 0;   // Clear tx buffer output before read index
         uart_chan[chan].tx_progress = false;   // Clear tx in progress flag
     }
+}
+
+void USART2_IRQHandler(void)
+{
+	unsigned char res;
+
+ 	if(USART_GetITStatus(USART2, USART_IT_RXNE) != RESET)
+ 	{
+ 		UART_RX_ISR(1);
+	}
+ 	else if(USART_GetITStatus(USART2, USART_IT_TC) != RESET)
+ 	{
+ 		USART_ClearITPendingBit(USART2, USART_IT_TC);
+ 		UART_TX_ISR(1);
+ 	}
 }
 
 /*=======================================================================================*\
