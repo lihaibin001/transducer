@@ -98,8 +98,8 @@ void Uart_InitIO(uint8_t chan)
 		USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
 
 		USART_Init( USART1, &USART_InitStructure );
-		USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
-		USART_ITConfig(USART1, USART_IT_TC, DISABLE);
+//		USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
+//		USART_ITConfig(USART1, USART_IT_TC, DISABLE);
 		USART_Cmd(USART1, ENABLE);
             break;
         case 1:
@@ -531,8 +531,6 @@ void UART_Reset_Buf(uint8_t chan)
 
 void USART2_IRQHandler(void)
 {
-	unsigned char res;
-
  	if(USART_GetITStatus(USART2, USART_IT_RXNE) != RESET)
  	{
  		UART_RX_ISR(1);

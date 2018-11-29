@@ -30,6 +30,8 @@ SOFTWARE.
 /* Includes */
 #include "stm32f0xx.h"
 #include "rs485.h"
+#include "tm7711.h"
+#include "led.h"
 /* Private macro */
 /* Private variables */
 /* Private function prototypes */
@@ -44,13 +46,15 @@ SOFTWARE.
 */
 int main(void)
 {
+	LED_Init();
 	rs485_init();
-
+	TM7711_PORT_Init();
   /* TODO - Add your application code here */
 
   /* Infinite loop */
   while (1)
   {
+	  TM7711_task();
 	  rs485_task();
   }
 }

@@ -29,7 +29,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f0xx_it.h"
-
+#include "debug.h"
 /** @addtogroup STM32F0308_Discovery_Peripheral_Examples
   * @{
   */
@@ -68,6 +68,7 @@ void HardFault_Handler(void)
   /* Go to infinite loop when Hard Fault exception occurs */
   while (1)
   {
+	  DEBUG("Hard fault\r\n");
   }
 }
 

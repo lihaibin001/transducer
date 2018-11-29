@@ -47,10 +47,10 @@
 // The following #defines should be used to configure Tx/Rx buffer sizes for all UART channels
 //  This allows each buffer for each channel to be a configurable size for saving RAM
 //  If a channel is not used, size must be at least 1 to compile
-#define UART0_RX_BUF_SIZE   256
-#define UART0_TX_BUF_SIZE   256
-#define UART1_RX_BUF_SIZE   256
-#define UART1_TX_BUF_SIZE   256
+#define UART0_RX_BUF_SIZE   0
+#define UART0_TX_BUF_SIZE   0
+#define UART1_RX_BUF_SIZE   128
+#define UART1_TX_BUF_SIZE   128
 #define UART_NUM_CHANNELS 2
 
 /******************************************************************************/
