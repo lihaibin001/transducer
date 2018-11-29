@@ -77,17 +77,14 @@ void Uart_InitIO(uint8_t chan)
     switch(chan)
     {
         case 0:
-
+    	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
+        RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1,ENABLE);
 		GPIO_PinAFConfig(GPIOA, GPIO_PinSource9, GPIO_AF_1);
 		GPIO_PinAFConfig(GPIOA, GPIO_PinSource10, GPIO_AF_1);
-		GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
+		GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10 | GPIO_Pin_9;
 		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
 		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-
-
-		GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
-		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
-		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 		GPIO_Init( GPIOA, &GPIO_InitStructure );
 
 		USART_InitStructure.USART_BaudRate = 115200;
@@ -110,8 +107,7 @@ void Uart_InitIO(uint8_t chan)
 		GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3 | GPIO_Pin_2;
 		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
 		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
-		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 		GPIO_Init( GPIOA, &GPIO_InitStructure );
 
 		USART_InitStructure.USART_BaudRate = 9600;

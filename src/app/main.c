@@ -46,9 +46,11 @@ SOFTWARE.
 */
 int main(void)
 {
+	debug_init();
 	LED_Init();
 	rs485_init();
 	TM7711_PORT_Init();
+	delay_init();
   /* TODO - Add your application code here */
 
   /* Infinite loop */

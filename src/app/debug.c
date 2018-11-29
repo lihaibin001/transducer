@@ -7,27 +7,24 @@
 
 #include "debug.h"
 
-#pragma import(__use_no_semihosting)
-
-struct __FILE {
-	int handle;
-/* Whatever you require here. If the only file you are using is */
-/* standard output using printf() for debugging, no file handling */
-/* is required. */
-};
-/* FILE is typedef¡¯ d in stdio.h. */
-FILE __stdout;
-
-void _sys_exit(int x) {
-	x = x;
-}
-
-int fputc(int ch, FILE *f) {
+int __io_putchar(int ch)
+{
 	while (!((USART1->ISR) & (1 << 7))) {
 	}
 	USART1->TDR = ch;
-	return (ch);
+	return ch;
 }
+
+int _write(int file, char *ptr, int len)
+{
+      int DataIdx;
+      for (DataIdx = 0; DataIdx < len;DataIdx++)
+     {
+           __io_putchar(*ptr++);
+     }
+      return len;
+}
+
 
 void debug_init(void) {
 	Uart_Initialize(0);

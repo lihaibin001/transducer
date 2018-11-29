@@ -27,7 +27,7 @@ void TM7711_PORT_Init(void) {
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 
@@ -36,7 +36,7 @@ void TM7711_PORT_Init(void) {
 			| GPIO_Pin_15;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOB, &GPIO_InitStructure);
 
@@ -45,7 +45,7 @@ void TM7711_PORT_Init(void) {
 			| GPIO_Pin_14;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOB, &GPIO_InitStructure);
 }
@@ -96,7 +96,7 @@ unsigned long Read_TM7711(unsigned char next_select, GPIO_TypeDef* GPIOx,
 		break;
 
 	}
-#if 0
+#if 1
 	if ((data_temp & 0x00800000) == 0x00800000) // 判断是否为负数
 	{
 		data_temp = (~(data_temp | 0xff000000)) + 1;
@@ -106,14 +106,7 @@ unsigned long Read_TM7711(unsigned char next_select, GPIO_TypeDef* GPIOx,
 }
 
 void TM7711_task(void) {
-	uTm7711_Value_Buf[0] = Read_TM7711(CH1_10HZ, GPIOA, GPIO_Pin_12, GPIO_Pin_11);
-	DEBUG("channel 0:%d\r\n",uTm7711_Value_Buf[0]);
-	uTm7711_Value_Buf[1] = Read_TM7711(CH1_10HZ, GPIOB, GPIO_Pin_9, GPIO_Pin_8);
-	DEBUG("channel 1:%d\r\n",uTm7711_Value_Buf[1]);
-	uTm7711_Value_Buf[2] = Read_TM7711(CH1_10HZ, GPIOB, GPIO_Pin_11, GPIO_Pin_10);
-	DEBUG("channel 2:%d\r\n",uTm7711_Value_Buf[2]);
-	uTm7711_Value_Buf[3] = Read_TM7711(CH1_10HZ, GPIOB, GPIO_Pin_13, GPIO_Pin_12);
-	DEBUG("channel 3:%d\r\n",uTm7711_Value_Buf[3]);
 	uTm7711_Value_Buf[4] = Read_TM7711(CH1_10HZ, GPIOB, GPIO_Pin_15, GPIO_Pin_14);
 	DEBUG("channel 4:%d\r\n",uTm7711_Value_Buf[4]);
+	delay_ms(1000);
 }
