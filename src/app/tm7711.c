@@ -54,6 +54,13 @@ unsigned long Read_TM7711(unsigned char next_select, GPIO_TypeDef* GPIOx,
 		uint16_t GPIO_Pin_CLK, uint16_t GPIO_Pin_Dat) {
 	unsigned char i = 0;
 	unsigned long data_temp = 0;
+
+	if(GPIO_ReadInputDataBit(GPIOx, GPIO_Pin_Dat))
+	{
+		GPIO_ResetBits(GPIOx, GPIO_Pin_CLK);
+		while(GPIO_ReadInputDataBit(GPIOx, GPIO_Pin_Dat))
+			;
+	}
 	for (i = 0; i < 24; i++) {
 
 		GPIO_SetBits(GPIOx, GPIO_Pin_CLK);
@@ -63,6 +70,7 @@ unsigned long Read_TM7711(unsigned char next_select, GPIO_TypeDef* GPIOx,
 			data_temp |= 1;
 		}
 		GPIO_ResetBits(GPIOx, GPIO_Pin_CLK);
+		delay_us(1);
 	}
 	switch (next_select) {
 	case CH1_10HZ:
@@ -96,17 +104,55 @@ unsigned long Read_TM7711(unsigned char next_select, GPIO_TypeDef* GPIOx,
 		break;
 
 	}
-#if 1
+#if 0
 	if ((data_temp & 0x00800000) == 0x00800000) // 判断是否为负数
 	{
-		data_temp = (~(data_temp | 0xff000000)) + 1;
+//		data_temp = (~(data_temp | 0xff000000)) + 1;
+		data_temp = ((~(data_temp | 0xff000000)) + 1) | 0x80000000;
 	}
 #endif
+#if 0
+	if ((data_temp & 0x00800000) == 0x00800000) // 判断是否为负数
+	{
+		data_temp |= 0xff000000;
+	}
+#endif
+#if 0
+	if((data_temp & 0x800000) == 0x800000)
+	{
+		data_temp = ~(data_temp - 1);
+	}
+#endif
+	data_temp ^= 0x800000;
+#if 0
+	switch(current_select)
+	{
+	case CH1_10HZ:
+		data_temp >>= 7;
+		break;
+	case CH1_40HZ:
+		data_temp >>= 8;
+		break;
+	}
+#endif
+	//return data_temp >> 8;
 	return data_temp;
 }
 
+static bool is_shelling = false;
+static uint32_t shelling = 0;
 void TM7711_task(void) {
+	uint32_t weight;
 	uTm7711_Value_Buf[4] = Read_TM7711(CH1_10HZ, GPIOB, GPIO_Pin_15, GPIO_Pin_14);
-	DEBUG("channel 4:%d\r\n",uTm7711_Value_Buf[4]);
+	DEBUG("channel 4:%ld\r\n",uTm7711_Value_Buf[4]);
+//	weight = uTm7711_Value_Buf[4] *  1000 / 0xFFFFFF* 30000 * 1000/ 898    ;
+	weight = (uTm7711_Value_Buf[4] & 0x00FFFF00) / 64;
+	if(is_shelling == false)
+	{
+		shelling = weight;
+		is_shelling = true;
+	}
+	weight -= shelling;
+	DEBUG("weight:%ld\r\n",weight);
 	delay_ms(1000);
 }
