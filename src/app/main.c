@@ -32,6 +32,8 @@ SOFTWARE.
 #include "rs485.h"
 #include "tm7711.h"
 #include "led.h"
+#include "eeprom.h"
+#include "debug.h"
 /* Private macro */
 /* Private variables */
 /* Private function prototypes */
@@ -46,17 +48,16 @@ SOFTWARE.
 */
 int main(void)
 {
+	IIC_Init();
 	debug_init();
 	LED_Init();
 	rs485_init();
 	TM7711_PORT_Init();
 	delay_init();
-  /* TODO - Add your application code here */
 
   /* Infinite loop */
   while (1)
   {
-	  TM7711_task();
-	  rs485_task();
+	  EE_Test();
   }
 }
