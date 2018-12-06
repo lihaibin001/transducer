@@ -105,8 +105,11 @@
 							<tool id="com.atollic.truestudio.exe.debug.toolchain.secoutput.195848719" name="Other" superClass="com.atollic.truestudio.exe.debug.toolchain.secoutput"/>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="com.atollic.truestudio.exe.debug.589461502.1264254374" name="stm32f0xx_pwr.c" rcbsApplicability="disable" resourcePath="src/Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_pwr.c" toolsToInvoke="com.atollic.truestudio.exe.debug.toolchain.gcc.1475088813.465768773">
+						<tool id="com.atollic.truestudio.exe.debug.toolchain.gcc.1475088813.465768773" name="C Compiler" superClass="com.atollic.truestudio.exe.debug.toolchain.gcc.1475088813"/>
+					</fileInfo>
 					<sourceEntries>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+						<entry excluding="Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_pwr.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_syscfg.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_spi.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_rtc.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_iwdg.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_i2c.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_flash.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_dma.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_dbgmcu.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_dac.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_crc.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_comp.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_cec.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_adc.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -217,7 +220,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+						<entry excluding="Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_syscfg.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_spi.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_rtc.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_iwdg.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_i2c.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_flash.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_dma.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_dbgmcu.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_dac.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_crc.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_comp.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_cec.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_adc.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
