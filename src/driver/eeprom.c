@@ -80,6 +80,7 @@ void EE_Test(void)
 	{
 		memset(test_buffer, i, 32);
 		EE_Write_Data(i*32, (const uint8_t *)test_buffer, 32);
+		DEBUG("[EE] Write complete\r\n");
 	}
 	for(i=0; i<125; i++)
 	{

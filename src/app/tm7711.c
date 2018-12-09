@@ -104,38 +104,8 @@ unsigned long Read_TM7711(unsigned char next_select, GPIO_TypeDef* GPIOx,
 		break;
 
 	}
-#if 0
-	if ((data_temp & 0x00800000) == 0x00800000) // 判断是否为负数
-	{
-//		data_temp = (~(data_temp | 0xff000000)) + 1;
-		data_temp = ((~(data_temp | 0xff000000)) + 1) | 0x80000000;
-	}
-#endif
-#if 0
-	if ((data_temp & 0x00800000) == 0x00800000) // 判断是否为负数
-	{
-		data_temp |= 0xff000000;
-	}
-#endif
-#if 0
-	if((data_temp & 0x800000) == 0x800000)
-	{
-		data_temp = ~(data_temp - 1);
-	}
-#endif
+
 	data_temp ^= 0x800000;
-#if 0
-	switch(current_select)
-	{
-	case CH1_10HZ:
-		data_temp >>= 7;
-		break;
-	case CH1_40HZ:
-		data_temp >>= 8;
-		break;
-	}
-#endif
-	//return data_temp >> 8;
 	return data_temp;
 }
 

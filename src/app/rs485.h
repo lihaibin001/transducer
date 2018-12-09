@@ -10,8 +10,9 @@
 
 #include "uart.h"
 
+#define rx485_read_char(x) Uart_Get_Char(1, x)
+
 void rs485_init(void);
-void rs485_task(void);
 bool rs485_send_data(uint8_t *pData, uint32_t len);
 
 #endif /* APP_RS485_H_ */

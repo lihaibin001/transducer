@@ -34,6 +34,8 @@ SOFTWARE.
 #include "led.h"
 #include "eeprom.h"
 #include "debug.h"
+#include "app.h"
+#include "base_timer.h"
 /* Private macro */
 /* Private variables */
 /* Private function prototypes */
@@ -54,10 +56,10 @@ int main(void)
 	rs485_init();
 	TM7711_PORT_Init();
 	delay_init();
-
+	base_timer_Init();
   /* Infinite loop */
   while (1)
   {
-	  EE_Test();
+	  App_task();
   }
 }
