@@ -55,7 +55,7 @@
 								<option id="com.atollic.truestudio.gcc.optimization.prep_garbage.551586797" name="Prepare dead code removal " superClass="com.atollic.truestudio.gcc.optimization.prep_garbage" useByScannerDiscovery="false"/>
 								<option id="com.atollic.truestudio.gcc.optimization.prep_data.1353415973" name="Prepare dead data removal" superClass="com.atollic.truestudio.gcc.optimization.prep_data" useByScannerDiscovery="false"/>
 								<option id="com.atollic.truestudio.gcc.cstandard.1971856198" name="C standard" superClass="com.atollic.truestudio.gcc.cstandard" useByScannerDiscovery="false" value="com.atollic.truestudio.gcc.cstandard.c1x" valueType="enumerated"/>
-								<option id="com.atollic.truestudio.exe.debug.toolchain.gcc.optimization.level.117391522" name="Optimization Level" superClass="com.atollic.truestudio.exe.debug.toolchain.gcc.optimization.level" useByScannerDiscovery="false" value="com.atollic.truestudio.gcc.optimization.level.0s" valueType="enumerated"/>
+								<option id="com.atollic.truestudio.exe.debug.toolchain.gcc.optimization.level.117391522" name="Optimization Level" superClass="com.atollic.truestudio.exe.debug.toolchain.gcc.optimization.level" useByScannerDiscovery="false" value="com.atollic.truestudio.gcc.optimization.level.0g" valueType="enumerated"/>
 								<inputType id="com.atollic.truestudio.gcc.input.973507503" superClass="com.atollic.truestudio.gcc.input"/>
 							</tool>
 							<tool id="com.atollic.truestudio.exe.debug.toolchain.ld.136934928" name="C Linker" superClass="com.atollic.truestudio.exe.debug.toolchain.ld">
@@ -105,9 +105,6 @@
 							<tool id="com.atollic.truestudio.exe.debug.toolchain.secoutput.195848719" name="Other" superClass="com.atollic.truestudio.exe.debug.toolchain.secoutput"/>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="com.atollic.truestudio.exe.debug.589461502.1264254374" name="stm32f0xx_pwr.c" rcbsApplicability="disable" resourcePath="src/Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_pwr.c" toolsToInvoke="com.atollic.truestudio.exe.debug.toolchain.gcc.1475088813.465768773">
-						<tool id="com.atollic.truestudio.exe.debug.toolchain.gcc.1475088813.465768773" name="C Compiler" superClass="com.atollic.truestudio.exe.debug.toolchain.gcc.1475088813"/>
-					</fileInfo>
 					<sourceEntries>
 						<entry excluding="Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_pwr.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_syscfg.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_spi.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_rtc.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_iwdg.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_i2c.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_flash.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_dma.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_dbgmcu.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_dac.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_crc.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_comp.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_cec.c|Libraries/STM32F0xx_StdPeriph_Driver/src/stm32f0xx_adc.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>

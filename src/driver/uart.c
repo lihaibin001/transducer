@@ -30,6 +30,7 @@ typedef struct uart_chan_tag
    uint16_t tx_size;                // Tx buffer size
    uint8_t* tx_buf;                 // Tx ring buffer
    bool     tx_progress;            // Tx in progress
+   bool idle;
 } uart_chan_T;
 
 
@@ -119,7 +120,7 @@ void Uart_InitIO(uint8_t chan)
 
 		USART_Init( USART2, &USART_InitStructure );
 		USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
-		USART_ITConfig(USART2, USART_IT_TC, DISABLE);
+//		USART_ITConfig(USART2,USART_IT_IDLE, DISABLE);
 		USART_Cmd(USART2, ENABLE);
 
 		NVIC_InitStruct.NVIC_IRQChannel = USART2_IRQn;
@@ -204,7 +205,7 @@ bool Uart_Get_Char (uint8_t chan, uint8_t* ptr)
     if (!ptr) 
         return false;    // Do not accept NULL pointers!
 
-    __disable_irq();
+//    __disable_irq();
 
     if(uart_chan[chan].rx_in != uart_chan[chan].rx_out)// Rx buffer not empty
     {
@@ -218,7 +219,7 @@ bool Uart_Get_Char (uint8_t chan, uint8_t* ptr)
 
         ret = true;
     }
-   __enable_irq();
+//   __enable_irq();
 
     return (ret);
 }
@@ -491,6 +492,58 @@ extern uint8_t UART_Transmit(uint8_t channel, const uint8_t* tx_buf, uint8_t byt
 }
 
 /*******************************************************************************
+*    Function: UART_Transmit_Block
+*  Parameters: Channel
+*              pointer to transmit data buffer
+*              number of bytes to send
+*     Returns: Number of bytes successfully sent/buffered
+* Description:
+*******************************************************************************/
+extern uint8_t UART_Transmit_Block(uint8_t channel, const uint8_t* tx_buf, uint8_t bytes)
+{
+	USART_TypeDef *tmp_USARTx = NULL;
+	uint8_t idx = 0;
+	uint16_t time_out = 0;
+	switch(channel)
+    {
+        case 0:
+            tmp_USARTx = USART1;
+            break;
+        case 1:
+            tmp_USARTx = USART2;
+            break;
+        default:
+        	return 0 ;
+    }
+	for(idx=0; idx<bytes; idx++)
+	{
+		time_out = 0;
+		while (!((tmp_USARTx->ISR) & (1 << 7))) {
+			if(time_out++ == 0xFFFFF)
+			{
+				return idx;
+			}
+		}
+		tmp_USARTx->TDR = tx_buf[idx];
+	}
+	return idx;
+}
+/*******************************************************************************
+*    Function: UART_Transmit_Block
+*  Parameters: Channel
+*     Returns: true/false
+* Description:
+*******************************************************************************/
+extern bool UART_Is_IDLE(uint8_t channel)
+{
+	if(channel >= UART_NUM_CHANNELS)
+	{
+		return false;
+	}
+	return uart_chan[channel].idle;
+}
+
+/*******************************************************************************
 *    Function: UART_Rx_Empty
 *  Parameters: Channel
 *     Returns: Nothing
@@ -529,12 +582,18 @@ void USART2_IRQHandler(void)
 {
  	if(USART_GetITStatus(USART2, USART_IT_RXNE) != RESET)
  	{
+ 		USART_ClearITPendingBit(USART2, USART_IT_RXNE);
  		UART_RX_ISR(1);
 	}
  	else if(USART_GetITStatus(USART2, USART_IT_TC) != RESET)
  	{
  		USART_ClearITPendingBit(USART2, USART_IT_TC);
  		UART_TX_ISR(1);
+ 	}
+ 	else if(USART_GetITStatus(USART2, USART_IT_IDLE) != RESET)
+ 	{
+ 		USART_ClearITPendingBit(USART2, USART_IT_IDLE);
+// 		uart_chan[2].idle = true;
  	}
 }
 

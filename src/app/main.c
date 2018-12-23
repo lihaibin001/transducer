@@ -36,6 +36,7 @@ SOFTWARE.
 #include "debug.h"
 #include "app.h"
 #include "base_timer.h"
+#include "modbus_rtu.h"
 /* Private macro */
 /* Private variables */
 /* Private function prototypes */
@@ -60,6 +61,9 @@ int main(void)
   /* Infinite loop */
   while (1)
   {
+//	  TM7711_task();
+	  modbus_rtu_task();
 	  App_task();
+
   }
 }

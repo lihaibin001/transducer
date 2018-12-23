@@ -10,74 +10,71 @@
 #include "crc.h"
 #include "debug.h"
 #include "base_timer.h"
-#define RX_BUFFER_LEN 64
-static uint8_t rtu_rx_buf[RX_BUFFER_LEN];
-static uint8_t rtu_rx_idx;
-static uint8_t self_id = 1;
+#include "modbus_rtu.h"
+#include <stdbool.h>
+#include "tm7711.h"
 
-static uint32_t u8_2_u32(uint8_t *pu8)
+#define MODBUS_RTU_FRAME_LEN 8
+#define CHANLE_NUM 5
+
+typedef struct
 {
-	return (uint32_t) (pu8[4] << 24 || pu8[1] << 16 || pu8[2] << 8 || pu8[0]);
+	uint8_t is_shelling : 1;
+	uint8_t reserve : 7;
+}App_flag_t;
+
+typedef struct {
+	GPIO_TypeDef *pPort;
+	uint16_t clk_pin;
+	uint16_t data_pin;
+} Channel_t;
+
+
+static uint32_t shelling = {0};
+static App_flag_t app_flag;
+const Channel_t g_channel[CHANLE_NUM] = {
+		{ GPIOA, GPIO_Pin_12, GPIO_Pin_11 },
+		{ GPIOB, GPIO_Pin_9, GPIO_Pin_8   },
+		{ GPIOB, GPIO_Pin_11, GPIO_Pin_10  },
+		{ GPIOB, GPIO_Pin_12, GPIO_Pin_13 },
+		{ GPIOB, GPIO_Pin_15, GPIO_Pin_14  },
+};
+
+static uint32_t App_read_adc(uint8_t channel) {
+
+	return Read_TM7711(CH1_10HZ, g_channel[channel].pPort, g_channel[channel].clk_pin, g_channel[channel].data_pin);
 }
 
-static void App_fnc3(void);
-
-
-
-static void App_fnc3(void)
-{
-	uint16_t crc16 = ModBusCRC16(rtu_rx_buf, 6);
-	if(crc16 == rtu_rx_buf[6] << 8 || rtu_rx_buf[7])
+static uint32_t App_read_weight(uint16_t reg_addr) {
+	uint32_t weight;
+	if(!app_flag.is_shelling)
 	{
-//		uint8_t i;
-//		uint32_t cnt = u8_2_u32(&rtu_rx_buf[2]);
-//		for(i=0; i<cnt; i++)
-//		{
-//			uint32_t weight =
-//		}
+		shelling = (App_read_adc(reg_addr / 2 - 1) & 0x00FFFE00) / 64;
+		app_flag.is_shelling = 1;
+//		delay_ms(20);
 	}
+	weight = (App_read_adc(reg_addr / 2 - 1) & 0x00FFFE00) / 64;
+	return  weight - shelling;
 }
 
-static void App_data_handler(void)
-{
-
-	if(rtu_rx_buf[0] == self_id)
-	{
-		switch(rtu_rx_buf[1])
+void App_task(void) {
+	uint8_t buff[MODBUS_RTU_FRAME_LEN] = "";
+	uint8_t len = MODBUS_RTU_FRAME_LEN;
+	if (modbus_get_one_frame(buff, &len) == 0) {
+		switch (buff[1]) {
+		case 0x03:
 		{
-		case 3:
-			App_fnc3();
+			uint32_t weight_int =  App_read_weight(buff[3]);
+			uint8_t weight_char[4];
+			weight_char[0] = (uint8_t)(weight_int >> 24);
+			weight_char[1] = (uint8_t)(weight_int >> 16);
+			weight_char[2] = (uint8_t)(weight_int >> 8);
+			weight_char[3] = (uint8_t)weight_int;
+			modbus_encode_and_send(0x03, 4, weight_char);
+			break;
+		}
+		default:
 			break;
 		}
 	}
-	else
-	{
-		memset(rtu_rx_buf, 0, RX_BUFFER_LEN);
-	}
 }
-
-void App_task(void)
-{
-	static uint32_t time_out;
-	if(time_out < base_timer_get_cnt())
-	{
-		bool is_get_data = false;
-		time_out = base_timer_get_cnt() + 20;
-		if(rtu_rx_idx == RX_BUFFER_LEN)
-		{
-			rtu_rx_idx = 0;
-		}
-		while(rx485_read_char(&rtu_rx_buf[rtu_rx_idx]))
-		{
-			is_get_data =  true;
-			DEBUG("%02X ", rtu_rx_buf[rtu_rx_idx]);
-			rtu_rx_idx++;
-		}
-		if(is_get_data)
-		{
-			DEBUG("\r\n");
-		}
-		//App_data_handler();
-	}
-}
-

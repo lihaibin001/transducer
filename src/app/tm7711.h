@@ -15,5 +15,7 @@
 #define CH2_40HZ_CLK 27
 #define CH2_TEMP_CLK 26
 
+
+unsigned long Read_TM7711(unsigned char next_select, GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin_CLK, uint16_t GPIO_Pin_Dat);
 void TM7711_PORT_Init(void);
 void TM7711_task(void);

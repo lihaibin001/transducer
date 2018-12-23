@@ -26,10 +26,16 @@ void rs485_init(void) {
 	rs485_enable();
 }
 
-bool rs485_send_data(uint8_t *pData, uint32_t len) {
-	if(len != UART_Transmit(1, pData, len)){
-		return false;
-	}
-	return true;
+uint16_t rs485_send_data(uint8_t *pData, uint32_t len) {
+	uint16_t ret;
+	GPIO_SetBits(GPIOA, GPIO_Pin_4);
+	ret = UART_Transmit_Block(1, pData, len);
+	delay_us(2000);
+	GPIO_ResetBits(GPIOA, GPIO_Pin_4);
+	return ret;
 }
 
+uint8_t rs485_read_char(uint8_t *pBuff)
+{
+	return Uart_Get_Char(1, pBuff);
+}

@@ -108,7 +108,7 @@ unsigned long Read_TM7711(unsigned char next_select, GPIO_TypeDef* GPIOx,
 	data_temp ^= 0x800000;
 	return data_temp;
 }
-
+#if 1
 static bool is_shelling = false;
 static uint32_t shelling = 0;
 void TM7711_task(void) {
@@ -126,3 +126,4 @@ void TM7711_task(void) {
 	DEBUG("weight:%ld\r\n",weight);
 	delay_ms(1000);
 }
+#endif

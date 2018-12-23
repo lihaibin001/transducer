@@ -50,7 +50,7 @@
 #define UART0_RX_BUF_SIZE   0
 #define UART0_TX_BUF_SIZE   0
 #define UART1_RX_BUF_SIZE   128
-#define UART1_TX_BUF_SIZE   128
+#define UART1_TX_BUF_SIZE   0
 #define UART_NUM_CHANNELS 2
 
 /******************************************************************************/
@@ -81,7 +81,9 @@ extern void UART_ERR_ISR(uint8_t chan);
 /* Function Prototypes for Private Functions with File Level Scope            */
 /******************************************************************************/
 extern uint8_t UART_Transmit(uint8_t channel, const uint8_t* tx_buf, uint8_t bytes);
+extern uint8_t UART_Transmit_Block(uint8_t channel, const uint8_t* tx_buf, uint8_t bytes);
 extern void UART_ReConfig(uint32_t baudrate,uint16_t len,uint16_t stopbit,uint16_t parity);
+extern bool UART_Is_IDLE(uint8_t channel);
 /*=======================================================================================*\
  * File Revision History
  *=======================================================================================
