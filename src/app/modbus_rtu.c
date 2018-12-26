@@ -117,3 +117,25 @@ uint8_t modbus_encode_and_send(uint8_t fnc_code, uint8_t len, uint8_t *pData)
 	DEBUG("\r\n");
 	return 0;
 }
+
+uint8_t modbus_encode(uint8_t fnc_code, uint8_t len, uint8_t *pData, uint8_t *pBuff)
+{
+	if(fnc_code == 0 || len == 0 || pData == NULL || pBuff == NULL )
+	{
+		return 0;
+	}
+	uint16_t crc16;
+	pBuff[0] = self_id;
+	pBuff[1] = fnc_code;
+	pBuff[2] = len;
+	memcpy(&pBuff[3], pData, len);
+	crc16 = ModBusCRC16(pBuff, len + 3);
+	pBuff[len+4] = (uint8_t)(crc16 >> 8);
+	pBuff[len+3] = (uint8_t)crc16;
+	return len + 5;
+}
+
+uint8_t modbus_send(uint8_t *pData, uint8_t len)
+{
+	return (uint8_t)rs485_send_data(pData, len);
+}

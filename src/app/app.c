@@ -17,6 +17,8 @@
 #define MODBUS_RTU_FRAME_LEN 8
 #define CHANLE_NUM 5
 
+static uint8_t send_buff[];
+
 typedef struct
 {
 	uint8_t is_shelling : 1;
@@ -57,13 +59,34 @@ static uint32_t App_read_weight(uint16_t reg_addr) {
 	return  weight - shelling;
 }
 
+static uint8_t App_read_weight_handle(uint8_t reg, uint8_t *pBuff){
+	uint32_t weight_int =  App_read_weight(reg);
+//	uint8_t weight_char[4];
+//	pBuff[0] = (uint8_t)(weight_int >> 24);
+//	pBuff[1] = (uint8_t)(weight_int >> 16);
+//	pBuff[2] = (uint8_t)(weight_int >> 8);
+//	pBuff[3] = (uint8_t)weight_int;
+	return modbus_encode(0x03, 4, (uint8_t *)&weight_int, pBuff);
+}
+
+static uint8_t App_read_coil_handle(uint8_t coil_addr, uint8_t coil_cnt, uint8_t *pBuff)
+{
+
+}
+
 void App_task(void) {
 	uint8_t buff[MODBUS_RTU_FRAME_LEN] = "";
 	uint8_t len = MODBUS_RTU_FRAME_LEN;
+	uint8_t send_buff[256];
+	uint8_t send_len;
 	if (modbus_get_one_frame(buff, &len) == 0) {
 		switch (buff[1]) {
 		case 0x03:
+			send_len = App_read_weight_handle(buff[3], send_buff);
+			break;
+#if 0
 		{
+
 			uint32_t weight_int =  App_read_weight(buff[3]);
 			uint8_t weight_char[4];
 			weight_char[0] = (uint8_t)(weight_int >> 24);
@@ -73,8 +96,16 @@ void App_task(void) {
 			modbus_encode_and_send(0x03, 4, weight_char);
 			break;
 		}
-		default:
+#endif
+		case 0x01:
+			send_len = App_read_coil_handle(buff[3], buff[5], send_buff);
 			break;
+		case 0x05:
+
+			break;
+		default:
+			return;
 		}
+		modbus_send(send_buff, send_len);
 	}
 }
