@@ -17,13 +17,18 @@
 #define MODBUS_RTU_FRAME_LEN 8
 #define CHANLE_NUM 5
 
-static uint8_t send_buff[];
 
-typedef struct
-{
-	uint8_t is_shelling : 1;
-	uint8_t reserve : 7;
-}App_flag_t;
+typedef struct {
+	uint8_t is_shelling :1;
+	uint8_t is_compensation :1;
+	uint8_t is_stabilize :1;
+	uint8_t is_1 :5;
+} App_flag_t;
+
+typedef struct {
+	App_flag_t falg;
+	uint32_t sehlling;
+} App_sensor_status_t;
 
 typedef struct {
 	GPIO_TypeDef *pPort;
@@ -31,81 +36,71 @@ typedef struct {
 	uint16_t data_pin;
 } Channel_t;
 
-
-static uint32_t shelling = {0};
-static App_flag_t app_flag;
+static App_sensor_status_t App_sensor_statu;
 const Channel_t g_channel[CHANLE_NUM] = {
-		{ GPIOA, GPIO_Pin_12, GPIO_Pin_11 },
-		{ GPIOB, GPIO_Pin_9, GPIO_Pin_8   },
-		{ GPIOB, GPIO_Pin_11, GPIO_Pin_10  },
-		{ GPIOB, GPIO_Pin_12, GPIO_Pin_13 },
-		{ GPIOB, GPIO_Pin_15, GPIO_Pin_14  },
+	{ GPIOA, GPIO_Pin_12, GPIO_Pin_11 },
+	{ GPIOB, GPIO_Pin_9, GPIO_Pin_8 },
+	{ GPIOB, GPIO_Pin_11,GPIO_Pin_10 },
+	{ GPIOB, GPIO_Pin_12, GPIO_Pin_13 },
+	{ GPIOB,GPIO_Pin_15, GPIO_Pin_14 },
 };
 
-static uint32_t App_read_adc(uint8_t channel) {
-
-	return Read_TM7711(CH1_10HZ, g_channel[channel].pPort, g_channel[channel].clk_pin, g_channel[channel].data_pin);
-}
-
 static uint32_t App_read_weight(uint16_t reg_addr) {
-	uint32_t weight;
-	if(!app_flag.is_shelling)
-	{
-		shelling = (App_read_adc(reg_addr / 2 - 1) & 0x00FFFE00) / 64;
-		app_flag.is_shelling = 1;
-//		delay_ms(20);
-	}
-	weight = (App_read_adc(reg_addr / 2 - 1) & 0x00FFFE00) / 64;
-	return  weight - shelling;
+	return  TM7711_get_value((uint8_t)reg_addr / 2) / 64;
 }
 
-static uint8_t App_read_weight_handle(uint8_t reg, uint8_t *pBuff){
-	uint32_t weight_int =  App_read_weight(reg);
+static uint8_t App_read_reg_handler(uint8_t reg, uint8_t *pBuff) {
+	uint32_t weight_int = App_read_weight(reg);
 //	uint8_t weight_char[4];
 //	pBuff[0] = (uint8_t)(weight_int >> 24);
 //	pBuff[1] = (uint8_t)(weight_int >> 16);
 //	pBuff[2] = (uint8_t)(weight_int >> 8);
 //	pBuff[3] = (uint8_t)weight_int;
-	return modbus_encode(0x03, 4, (uint8_t *)&weight_int, pBuff);
+	return modbus_encode(0x03, 4, (uint8_t *) &weight_int, pBuff);
 }
 
-static uint8_t App_read_coil_handle(uint8_t coil_addr, uint8_t coil_cnt, uint8_t *pBuff)
-{
+static uint8_t App_read_coil_handler(uint8_t coil_addr, uint8_t *pBuff) {
+	return 0;
+}
 
+static uint8_t App_write_coil_handler(uint8_t coil_addr, uint8_t *pBuff) {
+	return 0;
 }
 
 void App_task(void) {
 	uint8_t buff[MODBUS_RTU_FRAME_LEN] = "";
 	uint8_t len = MODBUS_RTU_FRAME_LEN;
 	uint8_t send_buff[256];
-	uint8_t send_len;
+	uint8_t send_len = 0;
 	if (modbus_get_one_frame(buff, &len) == 0) {
 		switch (buff[1]) {
 		case 0x03:
-			send_len = App_read_weight_handle(buff[3], send_buff);
+			send_len = App_read_reg_handler(buff[3], send_buff);
 			break;
 #if 0
-		{
+			{
 
-			uint32_t weight_int =  App_read_weight(buff[3]);
-			uint8_t weight_char[4];
-			weight_char[0] = (uint8_t)(weight_int >> 24);
-			weight_char[1] = (uint8_t)(weight_int >> 16);
-			weight_char[2] = (uint8_t)(weight_int >> 8);
-			weight_char[3] = (uint8_t)weight_int;
-			modbus_encode_and_send(0x03, 4, weight_char);
-			break;
-		}
+				uint32_t weight_int = App_read_weight(buff[3]);
+				uint8_t weight_char[4];
+				weight_char[0] = (uint8_t)(weight_int >> 24);
+				weight_char[1] = (uint8_t)(weight_int >> 16);
+				weight_char[2] = (uint8_t)(weight_int >> 8);
+				weight_char[3] = (uint8_t)weight_int;
+				modbus_encode_and_send(0x03, 4, weight_char);
+				break;
+			}
 #endif
 		case 0x01:
-			send_len = App_read_coil_handle(buff[3], buff[5], send_buff);
+			send_len = App_read_coil_handler(buff[3], send_buff);
 			break;
 		case 0x05:
-
+			send_len = App_write_coil_handler(buff[3], send_buff);
 			break;
 		default:
 			return;
 		}
-		modbus_send(send_buff, send_len);
+		if (send_len != 0) {
+			modbus_send(send_buff, send_len);
+		}
 	}
 }
